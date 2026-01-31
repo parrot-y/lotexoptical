@@ -11,6 +11,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 1.1 Mobile Nav Toggle
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const header = document.querySelector('.header');
+
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            header.classList.toggle('mobile-nav-active');
+            const icon = mobileToggle.querySelector('i');
+            if (header.classList.contains('mobile-nav-active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    }
+
     // 2. Intersection Observer for Scroll Reveals
     const revealOptions = {
         threshold: 0.1,
@@ -76,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 4. Header Scroll Effect
-    const header = document.querySelector('.header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header.style.padding = '1rem 0';

@@ -51,7 +51,7 @@ ul {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
 /* Animations Reveal Classes */
@@ -205,11 +205,33 @@ ul {
 }
 
 .nav-links {
-    gap: 3.5rem;
-    font-size: 0.9rem;
+    display: none;
+    gap: 2rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Hamburger Menu Icon */
+.mobile-toggle {
+    display: block;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.mobile-nav-active .nav-links {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 2rem;
+    border-bottom: 1px solid #eee;
+    z-index: 999;
 }
 
 .nav-links a {
@@ -247,9 +269,10 @@ ul {
 }
 
 .hero-grid {
-    grid-template-columns: 1.1fr 1.6fr 0.9fr;
+    display: flex;
+    flex-direction: column;
     gap: 3rem;
-    align-items: center;
+    padding-top: 2rem;
 }
 
 .hero-visuals {
@@ -258,7 +281,7 @@ ul {
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
     transform-origin: center;
     transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    height: 650px;
+    height: 450px;
 }
 
 .hero-visuals:hover {
@@ -266,11 +289,11 @@ ul {
 }
 
 .hero-title {
-    font-size: 7rem;
-    line-height: 0.85;
+    font-size: 3.5rem;
+    line-height: 0.9;
     margin-bottom: 2rem;
     color: #000;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
 }
 
 .label {
@@ -399,8 +422,10 @@ ul {
 
 .top-sellers-frames {
     flex: 1;
-    margin-left: 5rem;
-    gap: 3rem;
+    margin-top: 2rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .top-sellers-frames img {
@@ -425,16 +450,16 @@ ul {
 
 .wear-trend-banner {
     width: 100%;
-    height: 550px;
+    height: 350px;
     background-size: cover;
     background-position: center;
-    border-radius: 50px;
-    margin-bottom: 4rem;
+    border-radius: 40px;
+    margin-bottom: 3rem;
     position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 4rem;
+    padding-bottom: 3rem;
 }
 
 .banner-tagline {
@@ -447,30 +472,30 @@ ul {
 
 /* Promo Grid */
 .promo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 3rem;
 }
 
 .gold-exclusive {
-    height: 650px;
+    height: 450px;
     background-size: cover;
     background-position: center;
-    border-radius: 50px;
+    border-radius: 40px;
     position: relative;
-    padding: 5rem;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 }
 
 .promo-overlay h3 {
-    font-size: 5rem;
+    font-size: 3rem;
     color: white;
-    line-height: 0.85;
-    margin-bottom: 3rem;
-    letter-spacing: -1.5px;
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
 }
 
 .bogo-text {
@@ -481,8 +506,8 @@ ul {
 }
 
 .bogo-text h3 {
-    font-size: 4rem;
-    margin-bottom: 2.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .frame-game-bar {
@@ -508,14 +533,15 @@ ul {
 
 /* Perfect Fit */
 .perfect-fit-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
 }
 
 .section-title {
-    font-size: 5rem;
-    line-height: 0.9;
-    margin-bottom: 4rem;
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 2.5rem;
 }
 
 .category-tabs li {
@@ -530,10 +556,10 @@ ul {
 }
 
 .category-img-wrapper {
-    border-radius: 50px;
+    border-radius: 40px;
     overflow: hidden;
-    height: 500px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+    height: 350px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 .category-img {
@@ -544,8 +570,8 @@ ul {
 
 /* Footer */
 .footer h3 {
-    font-size: 4rem;
-    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
     color: #000;
 }
 
@@ -599,46 +625,78 @@ ul {
     color: var(--text-muted);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+    .nav-links {
+        display: flex;
+    }
+
+    .mobile-toggle {
+        display: none;
+    }
+
     .hero-title {
         font-size: 5rem;
     }
 
     .hero-grid {
-        grid-template-columns: 1fr 1.2fr;
-    }
-
-    .hero-side-grid {
-        gap: 1rem;
-    }
-
-    .circle-badge {
-        width: 110px;
-        height: 110px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .hero-grid {
+        display: grid;
         grid-template-columns: 1fr 1fr;
     }
 
-    .hero-side-grid {
-        display: none;
-        /* Only hide on very small tablets/mobile if necessary */
+    .promo-grid,
+    .perfect-fit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .category-img-wrapper {
+        height: 500px;
     }
 }
 
-@media (max-width: 768px) {
-
-    .hero-grid,
-    .promo-grid,
-    .perfect-fit-grid {
-        grid-template-columns: 1fr;
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 1.1fr 1.6fr 0.9fr;
     }
 
     .hero-title {
+        font-size: 7rem;
+    }
+
+    .hero-visuals {
+        height: 650px;
+    }
+
+    .section-title {
+        font-size: 5rem;
+    }
+
+    .top-sellers-frames {
+        margin-left: 5rem;
+        margin-top: 0;
+        justify-content: flex-start;
+    }
+
+    .wear-trend-banner {
+        height: 550px;
+    }
+
+    .gold-exclusive {
+        height: 650px;
+        padding: 5rem;
+    }
+
+    .promo-overlay h3 {
+        font-size: 5rem;
+    }
+
+    .bogo-text h3 {
+        font-size: 4rem;
+    }
+
+    .footer h3 {
         font-size: 4rem;
     }
 }
