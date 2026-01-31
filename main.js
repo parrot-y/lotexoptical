@@ -1,0 +1,133 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. WhatsApp Integration
+    const WHATSAPP_NUMBER = '254722361831';
+    const inquireButtons = document.querySelectorAll('.btn-whatsapp');
+
+    inquireButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const message = encodeURIComponent(`Hi Lotex Opticals & Eye Clinic! I'd like to book an appointment or inquire about eyewear.`);
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+        });
+    });
+
+    // 2. Intersection Observer for Scroll Reveals
+    const revealOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active-reveal');
+            }
+        });
+    }, revealOptions);
+
+    const revealElements = document.querySelectorAll('.reveal-left, .reveal-right, .reveal-up, .reveal-scale');
+
+    // Auto-reveal elements that are already in view on load
+    const revealOnLoad = () => {
+        setTimeout(() => {
+            revealElements.forEach((el, index) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    // Add a staggered delay for hero elements
+                    setTimeout(() => {
+                        el.classList.add('active-reveal');
+                    }, index * 150);
+                } else {
+                    revealObserver.observe(el);
+                }
+            });
+        }, 100);
+    };
+
+    revealOnLoad();
+
+    // 3. Category Tab Switching (Perfect Fit Section)
+    const tabs = document.querySelectorAll('.category-tabs li');
+    const categoryImg = document.querySelector('.category-img');
+
+    const categoryImages = {
+        'EYEGLASSES': 'assets/img/category_eyewear_green_1769759717832.png',
+        'SUNGLASSES': 'assets/img/glasses_lineup_1_1769759453089.png',
+        'COMPUTER GLASSES': 'assets/img/category_eyewear_green_1769759717832.png',
+        'CONTACT LENS': 'assets/img/lotex_trending_eye_close_up_black_1769787474470.png'
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(item => item.classList.remove('active'));
+            tab.classList.add('active');
+
+            const type = tab.textContent.trim();
+            if (categoryImages[type]) {
+                categoryImg.style.opacity = '0';
+                categoryImg.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    categoryImg.src = categoryImages[type];
+                    categoryImg.style.opacity = '1';
+                    categoryImg.style.transform = 'scale(1)';
+                }, 300);
+            }
+        });
+    });
+
+    // 4. Header Scroll Effect
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.style.padding = '1rem 0';
+            header.style.boxShadow = '0 15px 40px rgba(0,0,0,0.06)';
+        } else {
+            header.style.padding = '1.5rem 0';
+            header.style.boxShadow = 'none';
+        }
+    });
+
+    // 5. Smooth Scroll for Nav Links
+    document.querySelectorAll('.nav-links a, .hero-cta').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            if (!targetId || targetId === '#') return;
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // 6. Top Sellers Interaction
+    const sellerFrames = document.querySelectorAll('.clickable-frame');
+    sellerFrames.forEach(frame => {
+        frame.addEventListener('click', () => {
+            const message = encodeURIComponent(`Hi Lotex Opticals! I'm interested in the frames I saw in your top sellers section.`);
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+        });
+    });
+
+    // 7. Hero Image Shuffling
+    const heroMain = document.querySelector('.main-portrait');
+    const heroShufflingImages = [
+        'assets/img/lotex_hero_main_woman_1769787387703.png',
+        'assets/img/lotex_hero_shuffling_clinical_optometrist_1769828240501.png',
+        'assets/img/lotex_hero_shuffling_stylish_man_glasses_1769828253626.png',
+        'assets/img/lotex_hero_shuffling_woman_exam_1769828271503.png',
+        'assets/img/lotex_hero_shuffling_cool_glasses_woman_1769828286273.png'
+    ];
+    let currentHeroIndex = 0;
+
+    const shuffleHero = () => {
+        currentHeroIndex = (currentHeroIndex + 1) % heroShufflingImages.length;
+        heroMain.style.opacity = '0';
+
+        setTimeout(() => {
+            heroMain.style.backgroundImage = `url('${heroShufflingImages[currentHeroIndex]}')`;
+            heroMain.style.opacity = '1';
+        }, 800);
+    };
+
+    setInterval(shuffleHero, 6000); // Shuffle every 6 seconds
+});
