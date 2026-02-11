@@ -137,11 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroMain = document.querySelector('.main-portrait');
     if (heroMain) {
         const heroShufflingImages = [
-            'assets/img/lotex_hero_main_woman_1769787387703.png',
-            'assets/img/lotex_hero_shuffling_clinical_optometrist_1770784355218.png',
-            'assets/img/lotex_hero_shuffling_stylish_man_glasses_1769828253626.png',
-            'assets/img/lotex_hero_shuffling_woman_exam_1770784325229.png',
-            'assets/img/lotex_hero_shuffling_cool_glasses_woman_1769828286273.png'
+            'assets/img/lotex_hero_black_woman_stylish.png',
+            'assets/img/lotex_hero_black_man_stylish.png',
+            'assets/img/lotex_hero_black_woman_stylish.png', // Repeating for now to maintain shuffle length
+            'assets/img/lotex_hero_black_man_stylish.png'
         ];
         let currentHeroIndex = 0;
 
