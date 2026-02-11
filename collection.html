@@ -107,6 +107,8 @@
             margin-bottom: 2rem;
             cursor: pointer;
             font-weight: 700;
+            z-index: 10;
+            position: relative;
         }
 
         /* Products Grid */
@@ -472,183 +474,199 @@
 
     <script src="main.js"></script>
     <script>
-        // --- DATA GENERATION ---
-        const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior', 'Oakley', 'Carrera'];
-        const shapes = ['Aviator', 'Wayfarer', 'Round', 'Square', 'Cat Eye', 'Oval', 'Geometric'];
-        const genders = ['Men', 'Women', 'Unisex', 'Kids'];
-        const materials = ['Metal', 'Acetate', 'Titanium', 'Mix'];
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- MOBILE DRAWER TOGGLE (Priority) ---
+            const filterToggle = document.getElementById('filter-toggle');
+            const sidebar = document.getElementById('filter-sidebar');
+            const closeFilter = document.querySelector('.close-filter');
 
-        const products = [];
-        const imageFiles = [
-            "photo_10_2026-02-11_07-35-07.jpg", "photo_11_2026-02-11_07-35-07.jpg", "photo_12_2026-02-11_07-35-07.jpg",
-            "photo_13_2026-02-11_07-35-07.jpg", "photo_14_2026-02-11_07-35-07.jpg", "photo_15_2026-02-11_07-35-07.jpg",
-            "photo_16_2026-02-11_07-35-07.jpg", "photo_17_2026-02-11_07-35-07.jpg", "photo_18_2026-02-11_07-35-07.jpg",
-            "photo_19_2026-02-11_07-35-07.jpg", "photo_20_2026-02-11_07-35-07.jpg", "photo_21_2026-02-11_07-35-07.jpg",
-            "photo_22_2026-02-11_07-35-07.jpg", "photo_23_2026-02-11_07-35-07.jpg", "photo_24_2026-02-11_07-35-07.jpg",
-            "photo_25_2026-02-11_07-35-07.jpg", "photo_26_2026-02-11_07-35-07.jpg", "photo_27_2026-02-11_07-35-07.jpg",
-            "photo_28_2026-02-11_07-35-07.jpg", "photo_29_2026-02-11_07-35-07.jpg", "photo_30_2026-02-11_07-35-07.jpg",
-            "photo_31_2026-02-11_07-35-07.jpg", "photo_32_2026-02-11_07-35-07.jpg", "photo_33_2026-02-11_07-35-07.jpg",
-            "photo_34_2026-02-11_07-35-07.jpg", "photo_35_2026-02-11_07-35-07.jpg", "photo_36_2026-02-11_07-35-07.jpg",
-            "photo_37_2026-02-11_07-35-07.jpg", "photo_38_2026-02-11_07-35-07.jpg", "photo_39_2026-02-11_07-35-07.jpg",
-            "photo_40_2026-02-11_07-35-07.jpg", "photo_41_2026-02-11_07-35-07.jpg", "photo_42_2026-02-11_07-35-07.jpg",
-            "photo_5_2026-02-11_07-35-07.jpg", "photo_6_2026-02-11_07-35-07.jpg", "photo_7_2026-02-11_07-35-07.jpg",
-            "photo_8_2026-02-11_07-35-07.jpg", "photo_9_2026-02-11_07-35-07.jpg"
-        ];
-
-        const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
-        const getRandomPrice = (min, max) => Math.floor(Math.random() * (max - min + 1) / 100) * 100 + min;
-
-        // Populate Products with Extended Attributes
-        imageFiles.forEach((file, index) => {
-            const brand = getRandom(brands);
-            const shape = getRandom(shapes);
-            const gender = getRandom(genders);
-            const material = getRandom(materials);
-            const price = getRandomPrice(2500, 12000);
-
-            products.push({
-                id: index,
-                image: `assets/frames/${file}`,
-                brand: brand,
-                name: `${shape} ${material}`,
-                shape: shape,
-                gender: gender,
-                material: material,
-                price: price,
-                tags: [gender, shape]
-            });
-        });
-
-        // --- FILTER UI POPULATION ---
-        const brandFilterContainer = document.getElementById('brand-filters');
-
-        // Populate Brands Dynamically
-        brands.sort().forEach(brand => {
-            const label = document.createElement('label');
-            label.className = 'filter-checkbox';
-            label.innerHTML = `
-                <input type="checkbox" name="brand" value="${brand}"> ${brand}
-            `;
-            brandFilterContainer.appendChild(label);
-        });
-
-        // --- RENDER LOGIC ---
-        const grid = document.getElementById('products-grid');
-        const resultsCountStr = document.getElementById('results-count');
-
-        function renderProducts(items) {
-            grid.innerHTML = '';
-            resultsCountStr.textContent = `Showing ${items.length} results`;
-
-            if (items.length === 0) {
-                grid.innerHTML = `<div class="text-center" style="grid-column: 1/-1; padding: 4rem; color: #999;">
-                    <i class="far fa-frown" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                    <p>No products match your filters.</p>
-                    <button onclick="clearFilters()" class="btn btn-primary btn-sm" style="margin-top:1rem;">Clear Filters</button>
-                    </div>`;
-                return;
+            if (filterToggle && sidebar) {
+                filterToggle.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                });
             }
 
-            items.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card reveal-scale';
-                card.innerHTML = `
-                    <div class="product-image-wrapper">
-                         <div class="wishlist-icon"><i class="far fa-heart"></i></div>
-                        <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-header">
-                             <span class="product-brand">${product.brand}</span>
-                             <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
-                        </div>
-                        <h3 class="product-name">${product.gender}'s ${product.name}</h3>
-                        <div class="product-meta">
-                            ${product.tags.map(tag => `<span class="meta-tag">${tag}</span>`).join('')}
-                        </div>
-                        <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; border: 1px solid var(--text-main); color: var(--text-main);">
-                            INQUIRE
-                        </a>
-                    </div>
-                `;
-                grid.appendChild(card);
+            if (closeFilter && sidebar) {
+                closeFilter.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                });
+            }
 
-                // WhatsApp Logic
-                const btn = card.querySelector('.btn-whatsapp');
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} for ${product.gender} (Ref: ${product.id}), Price: KES ${product.price}`);
-                    window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
+            // --- DATA GENERATION ---
+            const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior', 'Oakley', 'Carrera'];
+            const shapes = ['Aviator', 'Wayfarer', 'Round', 'Square', 'Cat Eye', 'Oval', 'Geometric'];
+            const genders = ['Men', 'Women', 'Unisex', 'Kids'];
+            const materials = ['Metal', 'Acetate', 'Titanium', 'Mix'];
+
+            const products = [];
+            const imageFiles = [
+                "photo_10_2026-02-11_07-35-07.jpg", "photo_11_2026-02-11_07-35-07.jpg", "photo_12_2026-02-11_07-35-07.jpg",
+                "photo_13_2026-02-11_07-35-07.jpg", "photo_14_2026-02-11_07-35-07.jpg", "photo_15_2026-02-11_07-35-07.jpg",
+                "photo_16_2026-02-11_07-35-07.jpg", "photo_17_2026-02-11_07-35-07.jpg", "photo_18_2026-02-11_07-35-07.jpg",
+                "photo_19_2026-02-11_07-35-07.jpg", "photo_20_2026-02-11_07-35-07.jpg", "photo_21_2026-02-11_07-35-07.jpg",
+                "photo_22_2026-02-11_07-35-07.jpg", "photo_23_2026-02-11_07-35-07.jpg", "photo_24_2026-02-11_07-35-07.jpg",
+                "photo_25_2026-02-11_07-35-07.jpg", "photo_26_2026-02-11_07-35-07.jpg", "photo_27_2026-02-11_07-35-07.jpg",
+                "photo_28_2026-02-11_07-35-07.jpg", "photo_29_2026-02-11_07-35-07.jpg", "photo_30_2026-02-11_07-35-07.jpg",
+                "photo_31_2026-02-11_07-35-07.jpg", "photo_32_2026-02-11_07-35-07.jpg", "photo_33_2026-02-11_07-35-07.jpg",
+                "photo_34_2026-02-11_07-35-07.jpg", "photo_35_2026-02-11_07-35-07.jpg", "photo_36_2026-02-11_07-35-07.jpg",
+                "photo_37_2026-02-11_07-35-07.jpg", "photo_38_2026-02-11_07-35-07.jpg", "photo_39_2026-02-11_07-35-07.jpg",
+                "photo_40_2026-02-11_07-35-07.jpg", "photo_41_2026-02-11_07-35-07.jpg", "photo_42_2026-02-11_07-35-07.jpg",
+                "photo_5_2026-02-11_07-35-07.jpg", "photo_6_2026-02-11_07-35-07.jpg", "photo_7_2026-02-11_07-35-07.jpg",
+                "photo_8_2026-02-11_07-35-07.jpg", "photo_9_2026-02-11_07-35-07.jpg"
+            ];
+
+            const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            const getRandomPrice = (min, max) => Math.floor(Math.random() * (max - min + 1) / 100) * 100 + min;
+
+            // Populate Products
+            imageFiles.forEach((file, index) => {
+                const brand = getRandom(brands);
+                const shape = getRandom(shapes);
+                const gender = getRandom(genders);
+                const material = getRandom(materials);
+                const price = getRandomPrice(2500, 12000);
+
+                products.push({
+                    id: index,
+                    image: `assets/frames/${file}`,
+                    brand: brand,
+                    name: `${shape} ${material}`,
+                    shape: shape,
+                    gender: gender,
+                    material: material,
+                    price: price,
+                    tags: [gender, shape]
                 });
             });
 
-            // Re-trigger animations
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('active-reveal');
+            // --- DOM ELEMENTS ---
+            const brandFilterContainer = document.getElementById('brand-filters');
+            const grid = document.getElementById('products-grid');
+            const resultsCountStr = document.getElementById('results-count');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const maxPriceInput = document.getElementById('max-price');
+            const applyPriceBtn = document.getElementById('apply-price');
+            const clearBtn = document.getElementById('clear-filters');
+
+            // --- FUNCTIONS ---
+            function renderProducts(items) {
+                if (!grid) return;
+                grid.innerHTML = '';
+                if (resultsCountStr) resultsCountStr.textContent = `Showing ${items.length} results`;
+
+                if (items.length === 0) {
+                    grid.innerHTML = `<div class="text-center" style="grid-column: 1/-1; padding: 4rem; color: #999;">
+                        <i class="far fa-frown" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No products match your filters.</p>
+                        <button onclick="clearFilters()" class="btn btn-primary btn-sm" style="margin-top:1rem;">Clear Filters</button>
+                        </div>`;
+                    return;
+                }
+
+                items.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card reveal-scale';
+                    card.innerHTML = `
+                        <div class="product-image-wrapper">
+                             <div class="wishlist-icon"><i class="far fa-heart"></i></div>
+                            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-header">
+                                 <span class="product-brand">${product.brand}</span>
+                                 <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
+                            </div>
+                            <h3 class="product-name">${product.gender}'s ${product.name}</h3>
+                            <div class="product-meta">
+                                ${product.tags.map(tag => `<span class="meta-tag">${tag}</span>`).join('')}
+                            </div>
+                            <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; border: 1px solid var(--text-main); color: var(--text-main);">
+                                INQUIRE
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    const btn = card.querySelector('.btn-whatsapp');
+                    if (btn) {
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} for ${product.gender} (Ref: ${product.id}), Price: KES ${product.price}`);
+                            window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
+                        });
+                    }
                 });
-            });
-            document.querySelectorAll('.reveal-scale').forEach(el => revealObserver.observe(el));
-        }
 
-        // --- FILTERING LOGIC ---
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const maxPriceInput = document.getElementById('max-price');
-        const applyPriceBtn = document.getElementById('apply-price');
-        const clearBtn = document.getElementById('clear-filters');
+                // Re-trigger animations
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) entry.target.classList.add('active-reveal');
+                    });
+                });
+                document.querySelectorAll('.reveal-scale').forEach(el => revealObserver.observe(el));
+            }
 
-        function filterProducts() {
-            // Get selected values
-            const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
-            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
-            const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
-            const maxPrice = parseInt(maxPriceInput.value) || 100000;
+            function filterProducts() {
+                const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
+                const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+                const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
+                const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
-            const filtered = products.filter(item => {
-                const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
-                const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
-                const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
-                const priceMatch = item.price <= maxPrice;
+                const filtered = products.filter(item => {
+                    const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
+                    const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
+                    const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
+                    const priceMatch = item.price <= maxPrice;
 
-                return genderMatch && brandMatch && shapeMatch && priceMatch;
-            });
+                    return genderMatch && brandMatch && shapeMatch && priceMatch;
+                });
 
-            renderProducts(filtered);
-        }
+                renderProducts(filtered);
+            }
 
-        // Event Listeners
-        checkboxes.forEach(cb => cb.addEventListener('change', filterProducts));
-        applyPriceBtn.addEventListener('click', filterProducts);
+            // Expose clearFilters globally for the onclick handler in empty state
+            window.clearFilters = function () {
+                checkboxes.forEach(cb => cb.checked = false);
+                if (maxPriceInput) maxPriceInput.value = 15000;
+                filterProducts();
+            }
 
-        // Enter key for price
-        maxPriceInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') filterProducts();
+            // --- INIT ---
+            if (brandFilterContainer) {
+                brands.sort().forEach(brand => {
+                    const label = document.createElement('label');
+                    label.className = 'filter-checkbox';
+                    label.innerHTML = `
+                        <input type="checkbox" name="brand" value="${brand}"> ${brand}
+                    `;
+                    brandFilterContainer.appendChild(label);
+                });
+                // Re-select checkboxes after dynamic addition
+                // But specifically for event listeners, querySelectorAll is static? No, creates static NodeList.
+                // We need to re-bind or delegate.
+                // Since brands are added dynamically, let's delegate or just re-bind to all inputs again?
+                // Actually, the original code bound to 'checkboxes' which was queried AFTER dynamic population? 
+                // Wait, original code queried BEFORE population? No, let's check.
+                // Original code: line 523 dynamic population. line 595 querySelectorAll. So it was AFTER.
+                // My new code: querySelectorAll is bound in DOM ELEMENTS section. 
+                // So I need to ensure population runs BEFORE querySelectorAll call.
+            }
+
+            // Re-query checkboxes after dynamic population if needed
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+
+            if (applyPriceBtn) applyPriceBtn.addEventListener('click', filterProducts);
+            if (maxPriceInput) {
+                maxPriceInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') filterProducts();
+                });
+            }
+            if (clearBtn) clearBtn.addEventListener('click', window.clearFilters);
+
+            // Initial Render
+            renderProducts(products);
         });
-
-        clearBtn.addEventListener('click', clearFilters);
-
-        window.clearFilters = function () {
-            checkboxes.forEach(cb => cb.checked = false);
-            maxPriceInput.value = 15000;
-            filterProducts();
-        }
-
-        // --- MOBILE DRAWER TOGGLE ---
-        const filterToggle = document.getElementById('filter-toggle');
-        const sidebar = document.getElementById('filter-sidebar');
-        const closeFilter = document.querySelector('.close-filter');
-
-        filterToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-        });
-
-        closeFilter.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-        });
-
-        // Initialize
-        renderProducts(products);
-
     </script>
 </body>
 
