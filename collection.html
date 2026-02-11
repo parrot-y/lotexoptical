@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Collection | Lotex Opticals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Collection Specific Styles */
+        .page-header {
+            padding: 12rem 0 6rem;
+            background-color: var(--bg-accent);
+            text-align: center;
+        }
+
+        .filter-bar {
+            margin: 4rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #ddd;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--text-main);
+            color: white;
+            border-color: var(--text-main);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            /* Changed to contain so the whole frame is visible as per user request */
+            padding: 2rem;
+            background-color: #f9f9f9;
+            transition: transform 0.6s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-brand {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .product-name {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            /* Placeholder for price if needed later */
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            background: var(--bg-accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .lens-guide {
+            background: #000;
+            color: white;
+            padding: 6rem 0;
+            margin-top: 6rem;
+        }
+
+        .lens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .lens-card {
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .lens-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .lens-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .wishlist-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .wishlist-icon:hover {
+            color: red;
+            transform: scale(1.1);
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container flex align-center justify-between">
+            <a href="index.html" class="logo flex align-center">
+                <div class="icon-target sm" style="margin-right: 1rem;"></div>
+                <span class="logo-text">Lotex <span class="mint-text">Opticals</span></span>
+            </a>
+
+            <div class="mobile-toggle" id="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-links flex align-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="collection.html" class="active" style="color: var(--primary-dark);">Collection</a></li>
+                <li><a href="index.html#trending">New Arrivals</a></li>
+                <li><a href="index.html#perfect-fit">Our Clinic</a></li>
+                <li><a href="index.html#footer">Contact</a></li>
+            </ul>
+            <div class="header-actions flex align-center">
+                <a href="#" class="btn btn-primary btn-sm btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i> CLINIC INQUIRY
+                </a>
+            </div>
+            </nav>
+    </header>
+
+    <main>
+        <!-- HEADER -->
+        <section class="page-header">
+            <div class="container">
+                <span class="label">Curated Selection</span>
+                <h1 class="hero-title" style="font-size: 4rem;">The Collection</h1>
+                <p class="subtitle" style="max-width: 600px; margin: 0 auto; margin-top: 1rem;">
+                    Discover our premium range of frames. From timeless classics to modern statements.
+                </p>
+            </div>
+        </section>
+
+        <!-- COLLECTION -->
+        <section class="section-padding" style="padding-top: 0;">
+            <div class="container">
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All Frames</button>
+                    <button class="filter-btn" data-filter="eyeglasses">Eyeglasses</button>
+                    <button class="filter-btn" data-filter="sunglasses">Sunglasses</button>
+                    <button class="filter-btn" data-filter="kids">Kids</button>
+                </div>
+
+                <!-- Grid -->
+                <div class="products-grid" id="products-grid">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- LENS GUIDE -->
+        <section class="lens-guide">
+            <div class="container">
+                <div class="text-center">
+                    <span class="label" style="color: var(--primary);">Premium Options</span>
+                    <h2 class="serif section-title" style="color: white; font-size: 3rem;">Lens Technology</h2>
+                    <p style="color: #999;">Customize your frames with our advanced lens solutions.</p>
+                </div>
+
+                <div class="lens-grid">
+                    <div class="lens-card">
+                        <i class="fas fa-sun lens-icon"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Photochromic</h3>
+                        <p style="color: #ccc;">Smart lenses that adapt to changing light. Clear indoors, dark outdoors.
+                        </p>
+                    </div>
+                    <div class="lens-card">
+                        <i class="fas fa-laptop-medical lens-icon"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Blue Cut</h3>
+                        <p style="color: #ccc;">Essential protection against digital eye strain from screens and
+                            devices.</p>
+                    </div>
+                    <div class="lens-card">
+                        <i class="fas fa-glasses lens-icon"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">High Index</h3>
+                        <p style="color: #ccc;">Thinner, lighter lenses for superior comfort and aesthetic appeal.</p>
+                    </div>
+                    <div class="lens-card">
+                        <i class="fas fa-ban lens-icon"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Anti-Glare</h3>
+                        <p style="color: #ccc;">Eliminates reflections for clearer vision and better eye contact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer section-padding text-center">
+            <div class="container">
+                <div class="footer-cta" style="margin-bottom: 3rem;">
+                    <a href="#" class="btn btn-primary btn-whatsapp"><i class="fab fa-whatsapp"></i> BOOK
+                        APPOINTMENT</a>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Lotex Opticals & Eye Clinic. Kiambu Town, Kenya.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        // Product Data Generation
+        const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior'];
+        const categories = ['eyeglasses', 'sunglasses'];
+        const types = ['Classic', 'Aviator', 'Round', 'Square', 'Cat Eye'];
+
+        // Generate products based on the file list (simulated count)
+        const products = [];
+        // Available images from the file list step
+        const imageFiles = [
+            "photo_10_2026-02-11_07-35-07.jpg", "photo_11_2026-02-11_07-35-07.jpg", "photo_12_2026-02-11_07-35-07.jpg",
+            "photo_13_2026-02-11_07-35-07.jpg", "photo_14_2026-02-11_07-35-07.jpg", "photo_15_2026-02-11_07-35-07.jpg",
+            "photo_16_2026-02-11_07-35-07.jpg", "photo_17_2026-02-11_07-35-07.jpg", "photo_18_2026-02-11_07-35-07.jpg",
+            "photo_19_2026-02-11_07-35-07.jpg", "photo_20_2026-02-11_07-35-07.jpg", "photo_21_2026-02-11_07-35-07.jpg",
+            "photo_22_2026-02-11_07-35-07.jpg", "photo_23_2026-02-11_07-35-07.jpg", "photo_24_2026-02-11_07-35-07.jpg",
+            "photo_25_2026-02-11_07-35-07.jpg", "photo_26_2026-02-11_07-35-07.jpg", "photo_27_2026-02-11_07-35-07.jpg",
+            "photo_28_2026-02-11_07-35-07.jpg", "photo_29_2026-02-11_07-35-07.jpg", "photo_30_2026-02-11_07-35-07.jpg",
+            "photo_31_2026-02-11_07-35-07.jpg", "photo_32_2026-02-11_07-35-07.jpg", "photo_33_2026-02-11_07-35-07.jpg",
+            "photo_34_2026-02-11_07-35-07.jpg", "photo_35_2026-02-11_07-35-07.jpg", "photo_36_2026-02-11_07-35-07.jpg",
+            "photo_37_2026-02-11_07-35-07.jpg", "photo_38_2026-02-11_07-35-07.jpg", "photo_39_2026-02-11_07-35-07.jpg",
+            "photo_40_2026-02-11_07-35-07.jpg", "photo_41_2026-02-11_07-35-07.jpg", "photo_42_2026-02-11_07-35-07.jpg",
+            "photo_5_2026-02-11_07-35-07.jpg", "photo_6_2026-02-11_07-35-07.jpg", "photo_7_2026-02-11_07-35-07.jpg",
+            "photo_8_2026-02-11_07-35-07.jpg", "photo_9_2026-02-11_07-35-07.jpg"
+        ];
+
+        // Helper to get random item
+        const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        imageFiles.forEach((file, index) => {
+            const brand = getRandom(brands);
+            const type = getRandom(types);
+            const category = getRandom(categories);
+
+            products.push({
+                id: index,
+                image: `assets/frames/${file}`,
+                brand: brand,
+                name: `${brand} ${type}`,
+                category: category,
+                tags: [category, type]
+            });
+        });
+
+        // Specific overrides to ensure variety if needed, or user can edit later
+        // Render Function
+        const grid = document.getElementById('products-grid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderProducts(filter = 'all') {
+            grid.innerHTML = '';
+
+            const filtered = products.filter(p => filter === 'all' || p.category === filter);
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card reveal-scale'; // Added animation class
+                card.innerHTML = `
+                    <div class="product-image-wrapper" style="overflow: hidden; position: relative;">
+                         <div class="wishlist-icon"><i class="far fa-heart"></i></div>
+                        <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-header flex justify-between align-center" style="margin-bottom: 0.5rem;">
+                             <span class="product-brand">${product.brand}</span>
+                             <span class="price-tag">KES 3,500</span> 
+                        </div>
+                        <h3 class="product-name">${product.tags[1]} Frame</h3>
+                        <div class="product-meta">
+                            ${product.tags.map(tag => `<span class="meta-tag">${tag}</span>`).join('')}
+                        </div>
+                        <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; border: 1px solid var(--text-main); color: var(--text-main);">
+                            INQUIRE
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                // Add click listener custom for this card's inquiry
+                const btn = card.querySelector('.btn-whatsapp');
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const message = encodeURIComponent(`Hi Lotex! I'm interested in the ${product.name} (Ref: IMG-${product.id})`);
+                    window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
+                });
+            });
+
+            // Re-trigger animations if needed, or just let CSS handle it
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active-reveal');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.reveal-scale').forEach(el => revealObserver.observe(el));
+        }
+
+        // Init
+        renderProducts();
+
+        // Filter Logic
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProducts(btn.dataset.filter);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

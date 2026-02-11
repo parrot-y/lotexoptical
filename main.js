@@ -105,14 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Smooth Scroll for Nav Links
+    // 5. Smooth Scroll for Nav Links (Only for internal anchors)
     document.querySelectorAll('.nav-links a, .hero-cta').forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
             const targetId = link.getAttribute('href');
-            if (!targetId || targetId === '#') return;
-            document.querySelector(targetId).scrollIntoView({
-                behavior: 'smooth'
-            });
+
+            // Only intercept if it's an anchor link on the current page
+            if (targetId && targetId.startsWith('#')) {
+                e.preventDefault();
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            }
         });
     });
 
@@ -126,25 +133,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 7. Hero Image Shuffling
+    // 7. Hero Image Shuffling
     const heroMain = document.querySelector('.main-portrait');
-    const heroShufflingImages = [
-        'assets/img/lotex_hero_main_woman_1769787387703.png',
-        'assets/img/lotex_hero_shuffling_clinical_optometrist_1769828240501.png',
-        'assets/img/lotex_hero_shuffling_stylish_man_glasses_1769828253626.png',
-        'assets/img/lotex_hero_shuffling_woman_exam_1769828271503.png',
-        'assets/img/lotex_hero_shuffling_cool_glasses_woman_1769828286273.png'
-    ];
-    let currentHeroIndex = 0;
+    if (heroMain) {
+        const heroShufflingImages = [
+            'assets/img/lotex_hero_main_woman_1769787387703.png',
+            'assets/img/lotex_hero_shuffling_clinical_optometrist_1770784355218.png',
+            'assets/img/lotex_hero_shuffling_stylish_man_glasses_1769828253626.png',
+            'assets/img/lotex_hero_shuffling_woman_exam_1770784325229.png',
+            'assets/img/lotex_hero_shuffling_cool_glasses_woman_1769828286273.png'
+        ];
+        let currentHeroIndex = 0;
 
-    const shuffleHero = () => {
-        currentHeroIndex = (currentHeroIndex + 1) % heroShufflingImages.length;
-        heroMain.style.opacity = '0';
+        const shuffleHero = () => {
+            currentHeroIndex = (currentHeroIndex + 1) % heroShufflingImages.length;
+            heroMain.style.opacity = '0';
 
-        setTimeout(() => {
-            heroMain.style.backgroundImage = `url('${heroShufflingImages[currentHeroIndex]}')`;
-            heroMain.style.opacity = '1';
-        }, 800);
-    };
+            setTimeout(() => {
+                heroMain.style.backgroundImage = `url('${heroShufflingImages[currentHeroIndex]}')`;
+                heroMain.style.opacity = '1';
+            }, 800);
+        };
 
-    setInterval(shuffleHero, 6000); // Shuffle every 6 seconds
+        setInterval(shuffleHero, 6000); // Shuffle every 6 seconds
+    }
 });
