@@ -15,41 +15,105 @@
     <style>
         /* Collection Specific Styles */
         .page-header {
-            padding: 12rem 0 6rem;
+            padding: 12rem 0 4rem;
             background-color: var(--bg-accent);
             text-align: center;
         }
 
-        .filter-bar {
-            margin: 4rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+        /* Layout */
+        .collection-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            margin-top: 4rem;
         }
 
-        .filter-btn {
-            background: transparent;
-            border: 1px solid #ddd;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
+        /* Sidebar Filters */
+        .filter-sidebar {
+            background: white;
+            border-right: 1px solid #f0f0f0;
+            padding-right: 2rem;
+            height: fit-content;
+        }
+
+        .filter-group {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 1.5rem 0;
+        }
+
+        .filter-group:first-child {
+            padding-top: 0;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            font-family: var(--font-body);
-            font-weight: 600;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .filter-btn.active,
-        .filter-btn:hover {
-            background: var(--text-main);
-            color: white;
-            border-color: var(--text-main);
+        .filter-checkbox:hover {
+            color: var(--primary-dark);
         }
 
+        .filter-checkbox input {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .price-range-inputs {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .price-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-body);
+        }
+
+        /* Mobile Filter Toggle */
+        .mobile-filter-toggle {
+            display: none;
+            background: var(--text-main);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* Products Grid */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
             margin-bottom: 6rem;
         }
 
@@ -67,86 +131,32 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
         }
 
+        .product-image-wrapper {
+            overflow: hidden;
+            position: relative;
+            background-color: #fff;
+            /* Changed to white for cleaner look */
+            width: 100%;
+            aspect-ratio: 4/3;
+            /* Force horizontal aspect ratio */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .product-image {
             width: 100%;
-            height: 300px;
+            height: 100%;
             object-fit: contain;
-            /* Changed to contain so the whole frame is visible as per user request */
-            padding: 2rem;
-            background-color: #f9f9f9;
+            padding: 1rem;
+            /* Reduced padding to make image larger */
             transition: transform 0.6s ease;
+            mix-blend-mode: multiply;
+            /* Helps blend if white bg */
         }
 
         .product-card:hover .product-image {
             transform: scale(1.05);
-        }
-
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-brand {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .product-name {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-            /* Placeholder for price if needed later */
-        }
-
-        .product-meta {
-            display: flex;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .meta-tag {
-            background: var(--bg-accent);
-            padding: 0.3rem 0.8rem;
-            border-radius: 4px;
-        }
-
-        .lens-guide {
-            background: #000;
-            color: white;
-            padding: 6rem 0;
-            margin-top: 6rem;
-        }
-
-        .lens-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-
-        .lens-card {
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 20px;
-            transition: var(--transition);
-        }
-
-        .lens-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-5px);
-        }
-
-        .lens-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
         }
 
         .wishlist-icon {
@@ -171,10 +181,99 @@
             transform: scale(1.1);
         }
 
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-brand {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
         .price-tag {
             font-weight: 700;
             color: var(--primary-dark);
             font-size: 0.9rem;
+        }
+
+        .product-name {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            background: var(--bg-accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        /* Results Info */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .collection-layout {
+                display: block;
+            }
+
+            .filter-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 300px;
+                height: 100vh;
+                background: white;
+                z-index: 2000;
+                padding: 2rem;
+                overflow-y: auto;
+                transition: var(--transition);
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+            }
+
+            .filter-sidebar.active {
+                left: 0;
+            }
+
+            .mobile-filter-toggle {
+                display: block;
+            }
+
+            .close-filter {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
         }
     </style>
 </head>
@@ -183,8 +282,7 @@
     <header class="header">
         <div class="container flex align-center justify-between">
             <a href="index.html" class="logo flex align-center">
-                <div class="icon-target sm" style="margin-right: 1rem;"></div>
-                <span class="logo-text">Lotex <span class="mint-text">Opticals</span></span>
+                <img src="assets/img/lotex_logo.png" alt="Lotex Opticals" style="height: 60px; object-fit: contain;">
             </a>
 
             <div class="mobile-toggle" id="mobile-toggle">
@@ -200,7 +298,7 @@
             </ul>
             <div class="header-actions flex align-center">
                 <a href="#" class="btn btn-primary btn-sm btn-whatsapp">
-                    <i class="fab fa-whatsapp"></i> CLINIC INQUIRY
+                    <i class="fab fa-whatsapp"></i> <span class="btn-text">CLINIC INQUIRY</span>
                 </a>
             </div>
             </nav>
@@ -218,20 +316,98 @@
             </div>
         </section>
 
-        <!-- COLLECTION -->
+        <!-- COLLECTION LAYOUT -->
         <section class="section-padding" style="padding-top: 0;">
             <div class="container">
-                <!-- Filters -->
-                <div class="filter-bar">
-                    <button class="filter-btn active" data-filter="all">All Frames</button>
-                    <button class="filter-btn" data-filter="eyeglasses">Eyeglasses</button>
-                    <button class="filter-btn" data-filter="sunglasses">Sunglasses</button>
-                    <button class="filter-btn" data-filter="kids">Kids</button>
+
+                <div class="mobile-filter-toggle" id="filter-toggle">
+                    <i class="fas fa-filter"></i> SHOW FILTERS
                 </div>
 
-                <!-- Grid -->
-                <div class="products-grid" id="products-grid">
-                    <!-- JS will populate this -->
+                <div class="collection-layout">
+                    <!-- SIDEBAR FILTERS -->
+                    <aside class="filter-sidebar" id="filter-sidebar">
+                        <div class="close-filter hide-desktop"><i class="fas fa-times"></i></div>
+
+                        <!-- Gender -->
+                        <div class="filter-group">
+                            <div class="filter-title">Gender <i class="fas fa-chevron-down"></i></div>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="gender" value="Men"> Men
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="gender" value="Women"> Women
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="gender" value="Unisex"> Unisex
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="gender" value="Kids"> Kids
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="filter-group">
+                            <div class="filter-title">Brand <i class="fas fa-chevron-down"></i></div>
+                            <div class="filter-options" id="brand-filters">
+                                <!-- JS will populate -->
+                            </div>
+                        </div>
+
+                        <!-- Shape -->
+                        <div class="filter-group">
+                            <div class="filter-title">Shape <i class="fas fa-chevron-down"></i></div>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Aviator"> Aviator
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Wayfarer"> Wayfarer
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Round"> Round
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Square"> Square
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Cat Eye"> Cat Eye
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="filter-group">
+                            <div class="filter-title">Max Price (KES)</div>
+                            <div class="price-range-inputs">
+                                <input type="number" id="max-price" class="price-input" placeholder="15000"
+                                    value="15000">
+                                <button class="btn btn-primary btn-sm" id="apply-price">Go</button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-white btn-sm" id="clear-filters"
+                            style="width: 100%; margin-top: 1rem; border: 1px solid #ddd; color: #333;">Clear All
+                            Filters</button>
+                    </aside>
+
+                    <!-- PRODUCT GRID -->
+                    <div class="collection-content">
+                        <div class="results-info">
+                            <span id="results-count">Showing 0 results</span>
+                            <select
+                                style="border: none; background: transparent; font-family: var(--font-body); cursor: pointer;">
+                                <option>Sort by: Featured</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                            </select>
+                        </div>
+                        <div class="products-grid" id="products-grid">
+                            <!-- JS Populates this -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -279,6 +455,14 @@
                     <a href="#" class="btn btn-primary btn-whatsapp"><i class="fab fa-whatsapp"></i> BOOK
                         APPOINTMENT</a>
                 </div>
+
+                <div class="footer-contacts" style="margin-bottom: 2rem; color: #777; font-size: 0.9rem;">
+                    <p style="margin-bottom: 0.5rem;"><i class="fas fa-phone-alt"
+                            style="margin-right:0.5rem; color: var(--primary);"></i> +254 722 361 831 / +254 736 698 776
+                    </p>
+                    <p><i class="fas fa-envelope" style="margin-right:0.5rem; color: var(--primary);"></i>
+                        mutheewakariuki@gmail.com</p>
+                </div>
                 <div class="footer-bottom">
                     <p>&copy; 2026 Lotex Opticals & Eye Clinic. Kiambu Town, Kenya.</p>
                 </div>
@@ -288,14 +472,13 @@
 
     <script src="main.js"></script>
     <script>
-        // Product Data Generation
-        const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior'];
-        const categories = ['eyeglasses', 'sunglasses'];
-        const types = ['Classic', 'Aviator', 'Round', 'Square', 'Cat Eye'];
+        // --- DATA GENERATION ---
+        const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior', 'Oakley', 'Carrera'];
+        const shapes = ['Aviator', 'Wayfarer', 'Round', 'Square', 'Cat Eye', 'Oval', 'Geometric'];
+        const genders = ['Men', 'Women', 'Unisex', 'Kids'];
+        const materials = ['Metal', 'Acetate', 'Titanium', 'Mix'];
 
-        // Generate products based on the file list (simulated count)
         const products = [];
-        // Available images from the file list step
         const imageFiles = [
             "photo_10_2026-02-11_07-35-07.jpg", "photo_11_2026-02-11_07-35-07.jpg", "photo_12_2026-02-11_07-35-07.jpg",
             "photo_13_2026-02-11_07-35-07.jpg", "photo_14_2026-02-11_07-35-07.jpg", "photo_15_2026-02-11_07-35-07.jpg",
@@ -312,48 +495,74 @@
             "photo_8_2026-02-11_07-35-07.jpg", "photo_9_2026-02-11_07-35-07.jpg"
         ];
 
-        // Helper to get random item
         const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        const getRandomPrice = (min, max) => Math.floor(Math.random() * (max - min + 1) / 100) * 100 + min;
 
+        // Populate Products with Extended Attributes
         imageFiles.forEach((file, index) => {
             const brand = getRandom(brands);
-            const type = getRandom(types);
-            const category = getRandom(categories);
+            const shape = getRandom(shapes);
+            const gender = getRandom(genders);
+            const material = getRandom(materials);
+            const price = getRandomPrice(2500, 12000);
 
             products.push({
                 id: index,
                 image: `assets/frames/${file}`,
                 brand: brand,
-                name: `${brand} ${type}`,
-                category: category,
-                tags: [category, type]
+                name: `${shape} ${material}`,
+                shape: shape,
+                gender: gender,
+                material: material,
+                price: price,
+                tags: [gender, shape]
             });
         });
 
-        // Specific overrides to ensure variety if needed, or user can edit later
-        // Render Function
+        // --- FILTER UI POPULATION ---
+        const brandFilterContainer = document.getElementById('brand-filters');
+
+        // Populate Brands Dynamically
+        brands.sort().forEach(brand => {
+            const label = document.createElement('label');
+            label.className = 'filter-checkbox';
+            label.innerHTML = `
+                <input type="checkbox" name="brand" value="${brand}"> ${brand}
+            `;
+            brandFilterContainer.appendChild(label);
+        });
+
+        // --- RENDER LOGIC ---
         const grid = document.getElementById('products-grid');
-        const filterBtns = document.querySelectorAll('.filter-btn');
+        const resultsCountStr = document.getElementById('results-count');
 
-        function renderProducts(filter = 'all') {
+        function renderProducts(items) {
             grid.innerHTML = '';
+            resultsCountStr.textContent = `Showing ${items.length} results`;
 
-            const filtered = products.filter(p => filter === 'all' || p.category === filter);
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="text-center" style="grid-column: 1/-1; padding: 4rem; color: #999;">
+                    <i class="far fa-frown" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>No products match your filters.</p>
+                    <button onclick="clearFilters()" class="btn btn-primary btn-sm" style="margin-top:1rem;">Clear Filters</button>
+                    </div>`;
+                return;
+            }
 
-            filtered.forEach(product => {
+            items.forEach(product => {
                 const card = document.createElement('div');
-                card.className = 'product-card reveal-scale'; // Added animation class
+                card.className = 'product-card reveal-scale';
                 card.innerHTML = `
-                    <div class="product-image-wrapper" style="overflow: hidden; position: relative;">
+                    <div class="product-image-wrapper">
                          <div class="wishlist-icon"><i class="far fa-heart"></i></div>
                         <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                     </div>
                     <div class="product-info">
-                        <div class="product-header flex justify-between align-center" style="margin-bottom: 0.5rem;">
+                        <div class="product-header">
                              <span class="product-brand">${product.brand}</span>
-                             <span class="price-tag">KES 3,500</span> 
+                             <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
                         </div>
-                        <h3 class="product-name">${product.tags[1]} Frame</h3>
+                        <h3 class="product-name">${product.gender}'s ${product.name}</h3>
                         <div class="product-meta">
                             ${product.tags.map(tag => `<span class="meta-tag">${tag}</span>`).join('')}
                         </div>
@@ -364,38 +573,81 @@
                 `;
                 grid.appendChild(card);
 
-                // Add click listener custom for this card's inquiry
+                // WhatsApp Logic
                 const btn = card.querySelector('.btn-whatsapp');
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const message = encodeURIComponent(`Hi Lotex! I'm interested in the ${product.name} (Ref: IMG-${product.id})`);
+                    const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} for ${product.gender} (Ref: ${product.id}), Price: KES ${product.price}`);
                     window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
                 });
             });
 
-            // Re-trigger animations if needed, or just let CSS handle it
+            // Re-trigger animations
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active-reveal');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('active-reveal');
                 });
             });
-
             document.querySelectorAll('.reveal-scale').forEach(el => revealObserver.observe(el));
         }
 
-        // Init
-        renderProducts();
+        // --- FILTERING LOGIC ---
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const maxPriceInput = document.getElementById('max-price');
+        const applyPriceBtn = document.getElementById('apply-price');
+        const clearBtn = document.getElementById('clear-filters');
 
-        // Filter Logic
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderProducts(btn.dataset.filter);
+        function filterProducts() {
+            // Get selected values
+            const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
+            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+            const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
+            const maxPrice = parseInt(maxPriceInput.value) || 100000;
+
+            const filtered = products.filter(item => {
+                const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
+                const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
+                const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
+                const priceMatch = item.price <= maxPrice;
+
+                return genderMatch && brandMatch && shapeMatch && priceMatch;
             });
+
+            renderProducts(filtered);
+        }
+
+        // Event Listeners
+        checkboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+        applyPriceBtn.addEventListener('click', filterProducts);
+
+        // Enter key for price
+        maxPriceInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') filterProducts();
         });
+
+        clearBtn.addEventListener('click', clearFilters);
+
+        window.clearFilters = function () {
+            checkboxes.forEach(cb => cb.checked = false);
+            maxPriceInput.value = 15000;
+            filterProducts();
+        }
+
+        // --- MOBILE DRAWER TOGGLE ---
+        const filterToggle = document.getElementById('filter-toggle');
+        const sidebar = document.getElementById('filter-sidebar');
+        const closeFilter = document.querySelector('.close-filter');
+
+        filterToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+        });
+
+        closeFilter.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+
+        // Initialize
+        renderProducts(products);
 
     </script>
 </body>
