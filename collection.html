@@ -141,8 +141,8 @@
         .product-image-wrapper {
             overflow: hidden;
             position: relative;
-            background: radial-gradient(circle at center, #ffffff 0%, #f4f4f4 100%);
-            /* Radial gradient for depth */
+            background: #ffffff;
+            /* Clean white background like reference */
             width: 100%;
             aspect-ratio: 4/3;
             display: flex;
@@ -176,22 +176,22 @@
 
         .product-image {
             width: auto;
-            height: 120%;
-            /* Visual width = 1.2 * container height (~90% container width) */
-            max-width: 70%;
-            /* Visual height constrained to ~70% container width (~93% container height) */
+            /* Height 90% ensures it fits within the container width after rotation */
+            height: 90%;
+            max-width: 80%;
             object-fit: contain;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.4s ease;
             mix-blend-mode: multiply;
-            filter: contrast(1.1) saturate(1.1) brightness(1.02);
+            /* Extreme contrast to burn out white paper */
+            filter: contrast(1.3) brightness(1.15) saturate(1.1);
             z-index: 2;
             transform: rotate(-90deg);
             /* Rotate to horizontal */
         }
 
         .product-card:hover .product-image {
-            transform: rotate(-90deg) scale(1.08) translateX(5px);
-            /* Maintain rotation and lift */
+            transform: rotate(-90deg) scale(1.1);
+            /* Maintain rotation and zoom */
         }
 
         .wishlist-icon {
@@ -218,13 +218,18 @@
 
         .product-info {
             padding: 1.5rem;
+            text-align: center;
+            /* Center align text */
         }
 
         .product-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            /* Center brand */
             align-items: center;
             margin-bottom: 0.5rem;
+            display: none;
+            /* Hide top header, move info below name */
         }
 
         .product-brand {
@@ -233,34 +238,47 @@
             color: var(--text-muted);
             letter-spacing: 1px;
             font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         .price-tag {
             font-weight: 700;
-            color: var(--primary-dark);
-            font-size: 0.9rem;
+            color: #00ac9a;
+            /* Teal/Green price color */
+            font-size: 1rem;
+            display: block;
+            margin-top: 0.5rem;
         }
 
         .product-name {
             font-family: var(--font-heading);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
+            font-size: 1rem;
+            margin-bottom: 0px;
+            line-height: 1.4;
+            color: #007bff;
+            /* Blue title color like reference */
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .product-meta {
             display: flex;
+            justify-content: center;
+            /* Center badges */
             gap: 0.5rem;
             font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
+            margin-top: 0.5rem;
         }
 
         .meta-tag {
-            background: var(--bg-accent);
+            background: #f8f9fa;
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
+            font-size: 0.7rem;
         }
 
         /* Results Info */
@@ -379,6 +397,44 @@
                                 </label>
                                 <label class="filter-checkbox">
                                     <input type="checkbox" name="gender" value="Kids"> Kids
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Category (NEW) -->
+                        <div class="filter-group">
+                            <div class="filter-title">Category <i class="fas fa-chevron-down"></i></div>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="Eyeglasses"> Eyeglasses
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="Sunglasses"> Sunglasses
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="Computer Glasses"> Computer Glasses
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="Reading Glasses"> Reading Glasses
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Lens Technology (NEW) -->
+                        <div class="filter-group">
+                            <div class="filter-title">Lens Technology <i class="fas fa-chevron-down"></i></div>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Photochromic"> Photochromic
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Blue Cut"> Blue Cut
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Anti-Glare"> Anti-Glare
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="CR39"> Clear CR39
                                 </label>
                             </div>
                         </div>
@@ -530,6 +586,8 @@
             const shapes = ['Aviator', 'Wayfarer', 'Round', 'Square', 'Cat Eye', 'Oval', 'Geometric'];
             const genders = ['Men', 'Women', 'Unisex', 'Kids'];
             const materials = ['Metal', 'Acetate', 'Titanium', 'Mix'];
+            const categories = ['Eyeglasses', 'Sunglasses', 'Computer Glasses', 'Reading Glasses', 'Eyeglasses', 'Eyeglasses']; // Weighted for common items
+            const lensOptions = ['Photochromic', 'Blue Cut', 'Anti-Glare', 'CR39', 'Blue Cut', 'Photochromic'];
 
             const products = [];
             const imageFiles = [
@@ -549,6 +607,10 @@
             ];
 
             const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            const getRandomSubset = (arr, maxItems = 2) => {
+                const shuffled = arr.sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, Math.floor(Math.random() * maxItems) + 1);
+            };
             const getRandomPrice = (min, max) => Math.floor(Math.random() * (max - min + 1) / 100) * 100 + min;
 
             // Populate Products
@@ -557,6 +619,8 @@
                 const shape = getRandom(shapes);
                 const gender = getRandom(genders);
                 const material = getRandom(materials);
+                const category = getRandom(categories);
+                const lensFeatures = getRandomSubset(lensOptions);
                 const price = getRandomPrice(2500, 12000);
 
                 products.push({
@@ -568,6 +632,8 @@
                     gender: gender,
                     material: material,
                     price: price,
+                    category: category,
+                    lensFeatures: lensFeatures,
                     tags: [gender, shape]
                 });
             });
@@ -605,15 +671,13 @@
                             <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                         </div>
                         <div class="product-info">
-                            <div class="product-header">
-                                 <span class="product-brand">${product.brand}</span>
-                                 <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
-                            </div>
-                            <h3 class="product-name">${product.gender}'s ${product.name}</h3>
+                            <h3 class="product-name">${product.brand} ${product.name}</h3>
                             <div class="product-meta">
-                                ${product.tags.map(tag => `<span class="meta-tag">${tag}</span>`).join('')}
+                                <span class="meta-tag" style="background:#eef; color:#33d;">${product.category}</span>
                             </div>
-                            <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; border: 1px solid var(--text-main); color: var(--text-main);">
+                            <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
+                            
+                            <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; margin-top: 1rem; border: 1px solid var(--text-main); color: var(--text-main);">
                                 INQUIRE
                             </a>
                         </div>
@@ -643,15 +707,23 @@
                 const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
                 const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
                 const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+                const selectedLens = Array.from(document.querySelectorAll('input[name="lens"]:checked')).map(cb => cb.value);
                 const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
                 const filtered = products.filter(item => {
                     const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
                     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
                     const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
+                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+
+                    // Lens Match: If ANY selected lens feature is present in the item's features, it's a match
+                    // OR logic for lens features (e.g. if user selects "Blue Cut", show all items with Blue Cut)
+                    const lensMatch = selectedLens.length === 0 || selectedLens.some(l => item.lensFeatures.includes(l));
+
                     const priceMatch = item.price <= maxPrice;
 
-                    return genderMatch && brandMatch && shapeMatch && priceMatch;
+                    return genderMatch && brandMatch && shapeMatch && categoryMatch && lensMatch && priceMatch;
                 });
 
                 renderProducts(filtered);

@@ -596,13 +596,13 @@ ul {
 
 .category-img {
     width: auto;
-    height: 120%;
-    /* Visual width */
+    height: 90%;
     max-width: 80%;
     object-fit: contain;
     transform: rotate(-90deg);
     /* Rotate horizontal */
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15)) contrast(1.2) brightness(1.1);
+    /* Shadow + Blend fix */
     /* Add shadow since it floats */
 }
 
