@@ -341,7 +341,56 @@
             color: var(--text-muted);
         }
 
-        /* Responsive */
+        /* ================================
+           MOBILE FIRST RESPONSIVE
+           ================================ */
+
+        /* Base (mobile) — grid is 2 columns */
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .product-card {
+            border-radius: 12px;
+        }
+
+        .product-image-wrapper {
+            height: 160px;
+            padding: 10px;
+        }
+
+        .product-info {
+            padding: 0.85rem;
+        }
+
+        .product-name {
+            font-size: 0.78rem;
+        }
+
+        .price-tag {
+            font-size: 0.88rem;
+        }
+
+        .product-info .btn {
+            font-size: 0.72rem;
+            padding: 0.55rem 0.8rem;
+            margin-top: 0.6rem;
+        }
+
+        .page-header {
+            padding: 3rem 0 1.5rem;
+        }
+
+        .page-header .hero-title {
+            font-size: 2.2rem !important;
+        }
+
+        .page-header .subtitle {
+            font-size: 0.9rem;
+        }
+
+        /* Filters: off-canvas on mobile */
         @media (max-width: 992px) {
             .collection-layout {
                 display: block;
@@ -351,13 +400,13 @@
                 position: fixed;
                 top: 0;
                 left: -100%;
-                width: 300px;
+                width: min(300px, 85vw);
                 height: 100vh;
                 background: white;
                 z-index: 2000;
                 padding: 2rem;
                 overflow-y: auto;
-                transition: var(--transition);
+                transition: left 0.35s ease;
                 box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
             }
 
@@ -378,8 +427,79 @@
                 cursor: pointer;
             }
         }
+
+        /* Tablet (600px+): 3-column grid */
+        @media (min-width: 600px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.25rem;
+            }
+
+            .product-image-wrapper {
+                height: 200px;
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Desktop (1024px+): 4-column grid, full sidebar */
+        @media (min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 2rem;
+            }
+
+            .product-image-wrapper {
+                height: 240px;
+                padding: 16px;
+            }
+
+            .collection-layout {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                gap: 3rem;
+                align-items: start;
+            }
+
+            .mobile-filter-toggle {
+                display: none;
+            }
+
+            .product-name {
+                font-size: 1rem;
+            }
+
+            .page-header .hero-title {
+                font-size: 4rem !important;
+            }
+
+            /* Rotation fix for vertical photos */
+            .product-image.rotate-fix {
+                transform: rotate(90deg);
+                width: 100%;
+                height: auto;
+                max-height: 180px;
+                object-fit: contain;
+            }
+
+            .product-image-wrapper.raw-wrapper {
+                background: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            @media (max-width: 600px) {
+                .product-image.rotate-fix {
+                    max-height: 120px;
+                }
+            }
     </style>
 </head>
+
 
 <body>
     <header class="header">
@@ -756,16 +876,16 @@
                 // --- Frames (Static List) ---
                 { id: 'frame-ox-embery', brand: 'Ox Embery', name: 'Classic Square', price: 6000, image: 'assets/frames/Ox embery.jpg', hoverImage: 'assets/model_images/model_ox_embery.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: true, rating: 4.8, reviews: 12, lensFeatures: [], tags: ['Unisex', 'Square', 'Eyeglasses', 'Ox Embery'] },
                 { id: 'frame-eyelid', brand: 'Eyelid', name: 'Modern Rect', price: 6000, image: 'assets/frames/eyelid.jpg', hoverImage: 'assets/model_images/model_eyelid.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Eyelid'] },
-                { id: 'frame-gabiano', brand: 'Gabiano', name: 'Elegant Round', price: 5000, image: 'assets/frames/gabiano.jpg', hoverImage: 'assets/model_images/model_gabiano.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Mix', isNew: true, rating: 4.9, reviews: 15, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Gabiano'] },
+                { id: 'frame-gabiano', brand: 'Gabiano', name: 'Elegant Round', price: 5000, image: 'assets/frames/gabiano.jpg', hoverImage: 'assets/model_images/model_gabiano.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Mix', isNew: true, rating: 4.9, reviews: 15, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Gabiano'], needsRotation: true },
                 { id: 'frame-kc-kalla', brand: 'Kc Kalla', name: 'Urban Style', price: 3000, image: 'assets/frames/kalla.jpg', hoverImage: 'assets/model_images/model_kc_kalla.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.2, reviews: 5, lensFeatures: [], tags: ['Unisex', 'Square', 'Eyeglasses', 'Kc Kalla'] },
-                { id: 'frame-million', brand: 'Million', name: 'Luxury Aviator', price: 4000, image: 'assets/frames/million.jpg', hoverImage: 'assets/model_images/model_million.png', category: 'Sunglasses', gender: 'Men', shape: 'Aviator', material: 'Metal', isNew: true, rating: 4.7, reviews: 20, lensFeatures: [], tags: ['Men', 'Aviator', 'Sunglasses', 'Million'] },
-                { id: 'frame-danmac', brand: 'Danmac', name: 'Bold Frame', price: 4500, image: 'assets/frames/Danmac.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.3, reviews: 6, lensFeatures: [], tags: ['Men', 'Square', 'Eyeglasses', 'Danmac'] },
-                { id: 'frame-boivie', brand: 'Boivie', name: 'Slim Profile', price: 5000, image: 'assets/frames/boivie.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.4, reviews: 7, lensFeatures: [], tags: ['Unisex', 'Rectangle', 'Eyeglasses', 'Boivie'] },
-                { id: 'frame-caballo', brand: 'Caballo', name: 'Classic Design', price: 4000, image: 'assets/frames/caballo.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.3, reviews: 5, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Caballo'] },
-                { id: 'frame-humphreys', brand: 'Humphreys', name: 'Executive Style', price: 5500, image: 'assets/frames/humphreys.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Titanium', isNew: false, rating: 4.6, reviews: 9, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Humphreys'] },
-                { id: 'frame-studiomuku', brand: 'Studio Muku', name: 'Artistic Frame', price: 6000, image: 'assets/frames/studiomuku.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Acetate', isNew: true, rating: 4.7, reviews: 11, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Studio Muku'] },
-                { id: 'frame-swatch', brand: 'Swatch', name: 'Colorful Pop', price: 3500, image: 'assets/frames/swatch.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Round', material: 'Plastic', isNew: true, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Unisex', 'Round', 'Eyeglasses', 'Swatch'] },
-                { id: 'frame-verona', brand: 'Verona', name: 'Italian Style', price: 7000, image: 'assets/frames/verona.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Cat Eye', material: 'Acetate', isNew: true, rating: 4.8, reviews: 14, lensFeatures: [], tags: ['Women', 'Cat Eye', 'Eyeglasses', 'Verona'] }
+                { id: 'frame-million', brand: 'Million', name: 'Luxury Aviator', price: 4000, image: 'assets/frames/million.jpg', hoverImage: 'assets/model_images/model_million.png', category: 'Sunglasses', gender: 'Men', shape: 'Aviator', material: 'Metal', isNew: true, rating: 4.7, reviews: 20, lensFeatures: [], tags: ['Men', 'Aviator', 'Sunglasses', 'Million'], needsRotation: true },
+                { id: 'frame-danmac', brand: 'Danmac', name: 'Bold Frame', price: 4500, image: 'assets/frames/Danmac.jpg', hoverImage: 'assets/model_images/model_danmac.png', category: 'Eyeglasses', gender: 'Men', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.3, reviews: 6, lensFeatures: [], tags: ['Men', 'Square', 'Eyeglasses', 'Danmac'], needsRotation: true },
+                { id: 'frame-boivie', brand: 'Boivie', name: 'Slim Profile', price: 5000, image: 'assets/frames/boivie.jpg', hoverImage: 'assets/model_images/model_boivie.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.4, reviews: 7, lensFeatures: [], tags: ['Unisex', 'Rectangle', 'Eyeglasses', 'Boivie'], needsRotation: true },
+                { id: 'frame-caballo', brand: 'Caballo', name: 'Classic Design', price: 4000, image: 'assets/frames/caballo.jpg', hoverImage: 'assets/model_images/model_caballo.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.3, reviews: 5, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Caballo'] },
+                { id: 'frame-humphreys', brand: 'Humphreys', name: 'Executive Style', price: 5500, image: 'assets/frames/humphreys.jpg', hoverImage: 'assets/model_images/model_humphreys.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Titanium', isNew: false, rating: 4.6, reviews: 9, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Humphreys'], needsRotation: true },
+                { id: 'frame-studiomuku', brand: 'Studio Muku', name: 'Artistic Frame', price: 6000, image: 'assets/frames/studiomuku.jpg', hoverImage: 'assets/model_images/model_studiomuku.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Acetate', isNew: true, rating: 4.7, reviews: 11, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Studio Muku'] },
+                { id: 'frame-swatch', brand: 'Swatch', name: 'Colorful Pop', price: 3500, image: 'assets/frames/swatch.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Round', material: 'Plastic', isNew: true, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Unisex', 'Round', 'Eyeglasses', 'Swatch'], needsRotation: true },
+                { id: 'frame-verona', brand: 'Verona', name: 'Italian Style', price: 7000, image: 'assets/frames/verona.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Cat Eye', material: 'Acetate', isNew: true, rating: 4.8, reviews: 14, lensFeatures: [], tags: ['Women', 'Cat Eye', 'Eyeglasses', 'Verona'], needsRotation: true }
 
 
             ];
@@ -787,10 +907,11 @@
                 const discount = product.originalPrice ? `<span class="badge discount">-${Math.round((1 - product.price / product.originalPrice) * 100)}%</span>` : '';
                 const wrapperClass = product.isRaw ? 'product-image-wrapper raw-wrapper' : 'product-image-wrapper';
                 const imgClass = product.isRaw ? 'product-image raw-style' : 'product-image';
+                const rotateClass = product.needsRotation ? 'rotate-fix' : '';
 
-                // Hover Image Logic
-                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">`;
-                if (product.hoverImage) {
+                // Hover Image Logic - Only for frames, not raw lenses
+                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} ${rotateClass} main-img" loading="lazy">`;
+                if (!product.isRaw && product.hoverImage) {
                     imageHTML += `<img src="${product.hoverImage}" alt="${product.name} on model" class="${imgClass} hover-img" loading="lazy">`;
                 }
 
