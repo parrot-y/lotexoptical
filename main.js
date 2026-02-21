@@ -156,4 +156,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setInterval(shuffleHero, 6000); // Shuffle every 6 seconds
     }
+
+    // 8. Store Hero Carousel
+    const slides = document.querySelectorAll('.store-slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('carouselPrev');
+    const nextBtn = document.getElementById('carouselNext');
+
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        let autoplayTimer;
+
+        const goToSlide = (index) => {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        };
+
+        const startAutoplay = () => {
+            autoplayTimer = setInterval(() => goToSlide(currentSlide + 1), 5000);
+        };
+
+        const resetAutoplay = () => {
+            clearInterval(autoplayTimer);
+            startAutoplay();
+        };
+
+        // Dot click
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                goToSlide(parseInt(dot.dataset.slide));
+                resetAutoplay();
+            });
+        });
+
+        // Arrow clicks
+        if (prevBtn) prevBtn.addEventListener('click', () => { goToSlide(currentSlide - 1); resetAutoplay(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { goToSlide(currentSlide + 1); resetAutoplay(); });
+
+        startAutoplay();
+    }
 });

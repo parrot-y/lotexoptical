@@ -153,45 +153,95 @@
 
         /* Floor Shadow Effect */
         .product-image-wrapper::after {
-            content: '';
-            position: absolute;
-            bottom: 15%;
-            /* Position shadow below the glasses */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 15px;
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            z-index: -1;
-            /* Behind the image */
-            transition: var(--transition);
+            display: none;
         }
 
-        .product-card:hover .product-image-wrapper::after {
-            width: 50%;
-            /* Shrink shadow as object lifts */
-            opacity: 0.6;
-            bottom: 12%;
+
+
+        /* Product Image & Hover Effect */
+        .product-image-wrapper {
+            height: 240px;
+            overflow: hidden;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
         }
 
         .product-image {
-            width: auto;
-            /* Height 90% ensures it fits within the container width after rotation */
-            height: 90%;
-            max-width: 80%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
             transition: transform 0.4s ease;
-            mix-blend-mode: multiply;
-            /* Extreme contrast to burn out white paper */
-            filter: contrast(1.3) brightness(1.15) saturate(1.1);
-            z-index: 2;
-            transform: rotate(-90deg);
-            /* Rotate to horizontal */
         }
 
-        .product-card:hover .product-image {
-            transform: rotate(-90deg) scale(1.1);
-            /* Maintain rotation and zoom */
+        /* Frame main image: clean, no rotation */
+        .product-image.main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            mix-blend-mode: normal;
+            filter: none;
+            z-index: 1;
+            transform: none;
+        }
+
+        .product-card:hover .product-image.main-img {
+            transform: scale(1.04);
+            opacity: 0;
+        }
+
+        .product-image.hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            z-index: 3;
+            transition: opacity 0.4s ease;
+            transform: none !important;
+            filter: none !important;
+            mix-blend-mode: normal !important;
+        }
+
+        .product-card:hover .product-image.hover-img {
+            opacity: 1 !important;
+        }
+
+
+
+
+        /* Raw Style Overrides for Lenses */
+        .product-image.raw-style {
+            transform: none !important;
+            filter: none !important;
+            mix-blend-mode: normal !important;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-card:hover .product-image.raw-style {
+            transform: scale(1.05) !important;
+        }
+
+        .product-image-wrapper.raw-wrapper {
+            background: #fff;
+            padding: 0;
+        }
+
+        .product-image-wrapper.raw-wrapper::after {
+            display: none;
         }
 
         .wishlist-icon {
@@ -425,16 +475,30 @@
                             <div class="filter-title">Lens Technology <i class="fas fa-chevron-down"></i></div>
                             <div class="filter-options">
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" name="lens" value="Photochromic"> Photochromic
+                                    <input type="checkbox" name="lens" value="Progressive Transition"> Progressive
+                                    Transition
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" name="lens" value="Blue Cut"> Blue Cut
+                                    <input type="checkbox" name="lens" value="Progressive Blue Cut Clear"> Progressive
+                                    Blue Cut Clear
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" name="lens" value="Anti-Glare"> Anti-Glare
+                                    <input type="checkbox" name="lens" value="Photo Gray Progressive Blue Cut"> Photo
+                                    Gray Progressive Blue Cut
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" name="lens" value="CR39"> Clear CR39
+                                    <input type="checkbox" name="lens" value="Bifocal"> Bifocal
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Blue Cut Single Vision"> Blue Cut Single
+                                    Vision
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Photo Gray Blue Coating"> Photo Gray Blue
+                                    Coating
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="lens" value="Blue Cut Clear"> Blue Cut Clear
                                 </label>
                             </div>
                         </div>
@@ -582,61 +646,131 @@
             }
 
             // --- DATA GENERATION ---
-            const brands = ['Kalla', 'Gabiano', 'RayBan', 'Gucci', 'Prada', 'Tom Ford', 'Versace', 'Dior', 'Oakley', 'Carrera'];
-            const shapes = ['Aviator', 'Wayfarer', 'Round', 'Square', 'Cat Eye', 'Oval', 'Geometric'];
+            // --- DATA GENERATION ---
+            const brands = ['Kala', 'Ox Embery', 'Blue Light Blocking', 'Google', 'Special Cut Eye', 'Eyelid', 'Naili', 'Gabiano', 'Richard Taylor', 'George Piralli', 'Eco', 'Kc Kalla', 'Million', 'Warrior', 'Avam', 'Bright', 'Gallaway'];
+            const shapes = ['Round', 'Square', 'Rectangle', 'Cat Eye', 'Aviator', 'Oval'];
             const genders = ['Men', 'Women', 'Unisex', 'Kids'];
-            const materials = ['Metal', 'Acetate', 'Titanium', 'Mix'];
-            const categories = ['Eyeglasses', 'Sunglasses', 'Computer Glasses', 'Reading Glasses', 'Eyeglasses', 'Eyeglasses']; // Weighted for common items
-            const lensOptions = ['Photochromic', 'Blue Cut', 'Anti-Glare', 'CR39', 'Blue Cut', 'Photochromic'];
+            const materials = ['Metal', 'Acetate', 'Titanium', 'Mix', 'Plastic'];
+            const categories = ['Eyeglasses', 'Sunglasses', 'Computer Glasses', 'Reading Glasses']; // Weighted for common items
+            const lensOptions = []; // Empty: Lens technologies are reserved for standalone products
 
-            const products = [];
-            const imageFiles = [
-                "photo_10_2026-02-11_07-35-07.jpg", "photo_11_2026-02-11_07-35-07.jpg", "photo_12_2026-02-11_07-35-07.jpg",
-                "photo_13_2026-02-11_07-35-07.jpg", "photo_14_2026-02-11_07-35-07.jpg", "photo_15_2026-02-11_07-35-07.jpg",
-                "photo_16_2026-02-11_07-35-07.jpg", "photo_17_2026-02-11_07-35-07.jpg", "photo_18_2026-02-11_07-35-07.jpg",
-                "photo_19_2026-02-11_07-35-07.jpg", "photo_20_2026-02-11_07-35-07.jpg", "photo_21_2026-02-11_07-35-07.jpg",
-                "photo_22_2026-02-11_07-35-07.jpg", "photo_23_2026-02-11_07-35-07.jpg", "photo_24_2026-02-11_07-35-07.jpg",
-                "photo_25_2026-02-11_07-35-07.jpg", "photo_26_2026-02-11_07-35-07.jpg", "photo_27_2026-02-11_07-35-07.jpg",
-                "photo_28_2026-02-11_07-35-07.jpg", "photo_29_2026-02-11_07-35-07.jpg", "photo_30_2026-02-11_07-35-07.jpg",
-                "photo_31_2026-02-11_07-35-07.jpg", "photo_32_2026-02-11_07-35-07.jpg", "photo_33_2026-02-11_07-35-07.jpg",
-                "photo_34_2026-02-11_07-35-07.jpg", "photo_35_2026-02-11_07-35-07.jpg", "photo_36_2026-02-11_07-35-07.jpg",
-                "photo_37_2026-02-11_07-35-07.jpg", "photo_38_2026-02-11_07-35-07.jpg", "photo_39_2026-02-11_07-35-07.jpg",
-                "photo_40_2026-02-11_07-35-07.jpg", "photo_41_2026-02-11_07-35-07.jpg", "photo_42_2026-02-11_07-35-07.jpg",
-                "photo_5_2026-02-11_07-35-07.jpg", "photo_6_2026-02-11_07-35-07.jpg", "photo_7_2026-02-11_07-35-07.jpg",
-                "photo_8_2026-02-11_07-35-07.jpg", "photo_9_2026-02-11_07-35-07.jpg"
+            const products = [
+                {
+                    id: 'lens-prog-trans',
+                    image: 'assets/lenses/progressive_transition.png',
+                    brand: 'Lotex',
+                    name: 'Progressive Transition Lens',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 7999,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Progressive Transition'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Progressive Transition']
+                },
+                {
+                    id: 'lens-prog-blue-cut',
+                    image: 'assets/lenses/progressive_blue_cut_clear.png',
+                    brand: 'Lotex',
+                    name: 'Progressive Blue Cut Clear',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 8999,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Progressive Blue Cut Clear'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Progressive Blue Cut Clear']
+                },
+                {
+                    id: 'lens-photo-gray-prog-blue-cut',
+                    image: 'assets/lenses/photo_gray_progressive_blue_cut.png',
+                    brand: 'Lotex',
+                    name: 'Photo Gray Progressive Blue Cut',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 12000,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Photo Gray Progressive Blue Cut'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Photo Gray Progressive Blue Cut']
+                },
+                {
+                    id: 'lens-bifocal',
+                    image: 'assets/lenses/bifocal.png',
+                    brand: 'Lotex',
+                    name: 'Bifocal Lens',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 3999,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Bifocal'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Bifocal']
+                },
+                {
+                    id: 'lens-blue-cut-single',
+                    image: 'assets/lenses/blue_cut_single_vision.png',
+                    brand: 'Lotex',
+                    name: 'Blue Cut Single Vision',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 5999,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Blue Cut Single Vision'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Blue Cut Single Vision']
+                },
+                {
+                    id: 'lens-photo-gray-blue-coat',
+                    image: 'assets/lenses/photo_gray_blue_coating.png',
+                    brand: 'Lotex',
+                    name: 'Photo Gray Blue Coating',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 2500,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Photo Gray Blue Coating'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Photo Gray Blue Coating']
+                },
+                {
+                    id: 'lens-blue-cut-clear',
+                    image: 'assets/lenses/blue_cut_clear.png',
+                    brand: 'Lotex',
+                    name: 'Blue Cut Clear',
+                    shape: 'Round',
+                    gender: 'Unisex',
+                    material: 'Glass',
+                    price: 2500,
+                    category: 'Eyeglasses',
+                    lensFeatures: ['Blue Cut Clear'],
+                    isRaw: true,
+                    tags: ['Unisex', 'Round', 'Blue Cut Clear']
+                },
+                // --- Frames (Static List) ---
+                { id: 'frame-ox-embery', brand: 'Ox Embery', name: 'Classic Square', price: 6000, image: 'assets/frames/Ox embery.jpg', hoverImage: 'assets/model_images/model_ox_embery.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: true, rating: 4.8, reviews: 12, lensFeatures: [], tags: ['Unisex', 'Square', 'Eyeglasses', 'Ox Embery'] },
+                { id: 'frame-eyelid', brand: 'Eyelid', name: 'Modern Rect', price: 6000, image: 'assets/frames/eyelid.jpg', hoverImage: 'assets/model_images/model_eyelid.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Eyelid'] },
+                { id: 'frame-gabiano', brand: 'Gabiano', name: 'Elegant Round', price: 5000, image: 'assets/frames/gabiano.jpg', hoverImage: 'assets/model_images/model_gabiano.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Mix', isNew: true, rating: 4.9, reviews: 15, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Gabiano'] },
+                { id: 'frame-kc-kalla', brand: 'Kc Kalla', name: 'Urban Style', price: 3000, image: 'assets/frames/kalla.jpg', hoverImage: 'assets/model_images/model_kc_kalla.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.2, reviews: 5, lensFeatures: [], tags: ['Unisex', 'Square', 'Eyeglasses', 'Kc Kalla'] },
+                { id: 'frame-million', brand: 'Million', name: 'Luxury Aviator', price: 4000, image: 'assets/frames/million.jpg', hoverImage: 'assets/model_images/model_million.png', category: 'Sunglasses', gender: 'Men', shape: 'Aviator', material: 'Metal', isNew: true, rating: 4.7, reviews: 20, lensFeatures: [], tags: ['Men', 'Aviator', 'Sunglasses', 'Million'] },
+                { id: 'frame-danmac', brand: 'Danmac', name: 'Bold Frame', price: 4500, image: 'assets/frames/Danmac.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.3, reviews: 6, lensFeatures: [], tags: ['Men', 'Square', 'Eyeglasses', 'Danmac'] },
+                { id: 'frame-boivie', brand: 'Boivie', name: 'Slim Profile', price: 5000, image: 'assets/frames/boivie.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.4, reviews: 7, lensFeatures: [], tags: ['Unisex', 'Rectangle', 'Eyeglasses', 'Boivie'] },
+                { id: 'frame-caballo', brand: 'Caballo', name: 'Classic Design', price: 4000, image: 'assets/frames/caballo.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.3, reviews: 5, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Caballo'] },
+                { id: 'frame-humphreys', brand: 'Humphreys', name: 'Executive Style', price: 5500, image: 'assets/frames/humphreys.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Titanium', isNew: false, rating: 4.6, reviews: 9, lensFeatures: [], tags: ['Men', 'Rectangle', 'Eyeglasses', 'Humphreys'] },
+                { id: 'frame-studiomuku', brand: 'Studio Muku', name: 'Artistic Frame', price: 6000, image: 'assets/frames/studiomuku.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Acetate', isNew: true, rating: 4.7, reviews: 11, lensFeatures: [], tags: ['Women', 'Round', 'Eyeglasses', 'Studio Muku'] },
+                { id: 'frame-swatch', brand: 'Swatch', name: 'Colorful Pop', price: 3500, image: 'assets/frames/swatch.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Round', material: 'Plastic', isNew: true, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Unisex', 'Round', 'Eyeglasses', 'Swatch'] },
+                { id: 'frame-verona', brand: 'Verona', name: 'Italian Style', price: 7000, image: 'assets/frames/verona.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Cat Eye', material: 'Acetate', isNew: true, rating: 4.8, reviews: 14, lensFeatures: [], tags: ['Women', 'Cat Eye', 'Eyeglasses', 'Verona'] }
+
+
             ];
 
-            const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
-            const getRandomSubset = (arr, maxItems = 2) => {
-                const shuffled = arr.sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, Math.floor(Math.random() * maxItems) + 1);
-            };
-            const getRandomPrice = (min, max) => Math.floor(Math.random() * (max - min + 1) / 100) * 100 + min;
-
-            // Populate Products
-            imageFiles.forEach((file, index) => {
-                const brand = getRandom(brands);
-                const shape = getRandom(shapes);
-                const gender = getRandom(genders);
-                const material = getRandom(materials);
-                const category = getRandom(categories);
-                const lensFeatures = getRandomSubset(lensOptions);
-                const price = getRandomPrice(2500, 12000);
-
-                products.push({
-                    id: index,
-                    image: `assets/frames/${file}`,
-                    brand: brand,
-                    name: `${shape} ${material}`,
-                    shape: shape,
-                    gender: gender,
-                    material: material,
-                    price: price,
-                    category: category,
-                    lensFeatures: lensFeatures,
-                    tags: [gender, shape]
-                });
-            });
+            const itemsPerPage = 12;
 
             // --- DOM ELEMENTS ---
             const brandFilterContainer = document.getElementById('brand-filters');
@@ -648,6 +782,44 @@
             const clearBtn = document.getElementById('clear-filters');
 
             // --- FUNCTIONS ---
+            function createProductCard(product) {
+                const isNewBadge = product.isNew ? '<span class="badge new">New</span>' : '';
+                const discount = product.originalPrice ? `<span class="badge discount">-${Math.round((1 - product.price / product.originalPrice) * 100)}%</span>` : '';
+                const wrapperClass = product.isRaw ? 'product-image-wrapper raw-wrapper' : 'product-image-wrapper';
+                const imgClass = product.isRaw ? 'product-image raw-style' : 'product-image';
+
+                // Hover Image Logic
+                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">`;
+                if (product.hoverImage) {
+                    imageHTML += `<img src="${product.hoverImage}" alt="${product.name} on model" class="${imgClass} hover-img" loading="lazy">`;
+                }
+
+                return `
+                <div class="product-card reveal-scale" data-id="${product.id}" data-category="${product.category}" data-brand="${product.brand}" data-price="${product.price}">
+                    <div class="${wrapperClass}">
+                        ${isNewBadge}
+                        ${discount}
+                        ${imageHTML}
+                        <div class="product-actions">
+                            <button class="action-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+                            <button class="action-btn" title="Quick View"><i class="far fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.brand} ${product.name}</h3>
+                        <div class="product-meta">
+                            <span class="meta-tag" style="background:#eef; color:#33d;">${product.category}</span>
+                        </div>
+                        <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
+                        
+                        <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; margin-top: 1rem; border: 1px solid var(--text-main); color: var(--text-main);">
+                            INQUIRE
+                        </a>
+                    </div>
+                </div>
+                `;
+            }
+
             function renderProducts(items) {
                 if (!grid) return;
                 grid.innerHTML = '';
@@ -663,25 +835,10 @@
                 }
 
                 items.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card reveal-scale';
-                    card.innerHTML = `
-                        <div class="product-image-wrapper">
-                             <div class="wishlist-icon"><i class="far fa-heart"></i></div>
-                            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">${product.brand} ${product.name}</h3>
-                            <div class="product-meta">
-                                <span class="meta-tag" style="background:#eef; color:#33d;">${product.category}</span>
-                            </div>
-                            <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
-                            
-                            <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; margin-top: 1rem; border: 1px solid var(--text-main); color: var(--text-main);">
-                                INQUIRE
-                            </a>
-                        </div>
-                    `;
+                    const cardHTML = createProductCard(product);
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = cardHTML;
+                    const card = tempDiv.firstElementChild;
                     grid.appendChild(card);
 
                     const btn = card.querySelector('.btn-whatsapp');
@@ -712,10 +869,13 @@
                 const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
                 const filtered = products.filter(item => {
-                    const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
+                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+
+                    // Lenses (isRaw) should be gender-neutral or appear regardless of gender filter
+                    const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender) || item.isRaw;
                     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
                     const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
-                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+
 
                     // Lens Match: If ANY selected lens feature is present in the item's features, it's a match
                     // OR logic for lens features (e.g. if user selects "Blue Cut", show all items with Blue Cut)
