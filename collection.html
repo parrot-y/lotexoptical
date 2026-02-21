@@ -391,6 +391,72 @@
         }
 
         /* Filters: off-canvas on mobile */
+
+        /* Rotation fix for vertical photos - Global Scope */
+        .product-image.rotate-fix {
+            transform: rotate(90deg);
+            width: 100%;
+            height: auto;
+            max-height: 180px;
+            object-fit: contain;
+        }
+
+        .product-image-wrapper.raw-wrapper {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .product-image.rotate-fix {
+                max-height: 120px;
+            }
+        }
+
+        /* Search Bar Styles */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: #fcfcfc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            transition: var(--transition);
+        }
+
+        .search-input:focus+.search-icon {
+            color: var(--primary-dark);
+        }
+
+        /* Mobile Filter Tweaks */
         @media (max-width: 992px) {
             .collection-layout {
                 display: block;
@@ -404,7 +470,7 @@
                 height: 100vh;
                 background: white;
                 z-index: 2000;
-                padding: 2rem;
+                padding: 4rem 2rem 2rem;
                 overflow-y: auto;
                 transition: left 0.35s ease;
                 box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
@@ -419,12 +485,24 @@
             }
 
             .close-filter {
-                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 position: absolute;
-                top: 1rem;
-                right: 1rem;
-                font-size: 1.5rem;
+                top: 1.5rem;
+                right: 1.5rem;
+                width: 40px;
+                height: 40px;
+                background: #f5f5f5;
+                border-radius: 50%;
+                font-size: 1.2rem;
                 cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .close-filter:hover {
+                background: var(--text-main);
+                color: white;
             }
         }
 
@@ -475,28 +553,7 @@
             .page-header .hero-title {
                 font-size: 4rem !important;
             }
-
-            /* Rotation fix for vertical photos */
-            .product-image.rotate-fix {
-                transform: rotate(90deg);
-                width: 100%;
-                height: auto;
-                max-height: 180px;
-                object-fit: contain;
-            }
-
-            .product-image-wrapper.raw-wrapper {
-                background: #fff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            @media (max-width: 600px) {
-                .product-image.rotate-fix {
-                    max-height: 120px;
-                }
-            }
+        }
     </style>
 </head>
 
@@ -550,7 +607,16 @@
                 <div class="collection-layout">
                     <!-- SIDEBAR FILTERS -->
                     <aside class="filter-sidebar" id="filter-sidebar">
-                        <div class="close-filter hide-desktop"><i class="fas fa-times"></i></div>
+                        <div class="close-filter" id="close-filter"><i class="fas fa-times"></i></div>
+
+                        <!-- Search Bar (NEW) -->
+                        <div class="search-container">
+                            <div class="search-input-wrapper">
+                                <input type="text" id="product-search" class="search-input"
+                                    placeholder="Search frames, brands...">
+                                <i class="fas fa-search search-icon"></i>
+                            </div>
+                        </div>
 
                         <!-- Gender -->
                         <div class="filter-group">
@@ -748,22 +814,7 @@
     <script src="main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- MOBILE DRAWER TOGGLE (Priority) ---
-            const filterToggle = document.getElementById('filter-toggle');
-            const sidebar = document.getElementById('filter-sidebar');
-            const closeFilter = document.querySelector('.close-filter');
-
-            if (filterToggle && sidebar) {
-                filterToggle.addEventListener('click', () => {
-                    sidebar.classList.add('active');
-                });
-            }
-
-            if (closeFilter && sidebar) {
-                closeFilter.addEventListener('click', () => {
-                    sidebar.classList.remove('active');
-                });
-            }
+            // (Mobile Drawer logic moved to bottom of this script block)
 
             // --- DATA GENERATION ---
             // --- DATA GENERATION ---
@@ -982,6 +1033,7 @@
             }
 
             function filterProducts() {
+                const searchQuery = document.getElementById('product-search')?.value.toLowerCase() || '';
                 const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
                 const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
                 const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
@@ -990,6 +1042,10 @@
                 const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
                 const filtered = products.filter(item => {
+                    // Search Match
+                    const searchableText = `${item.brand} ${item.name} ${item.category} ${item.gender} ${item.shape}`.toLowerCase();
+                    const searchMatch = !searchQuery || searchableText.includes(searchQuery);
+
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
 
                     // Lenses (isRaw) should be gender-neutral or appear regardless of gender filter
@@ -1004,7 +1060,7 @@
 
                     const priceMatch = item.price <= maxPrice;
 
-                    return genderMatch && brandMatch && shapeMatch && categoryMatch && lensMatch && priceMatch;
+                    return searchMatch && genderMatch && brandMatch && shapeMatch && categoryMatch && lensMatch && priceMatch;
                 });
 
                 renderProducts(filtered);
@@ -1040,15 +1096,28 @@
 
             // Re-query checkboxes after dynamic population if needed
             const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-            allCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+            // Event Listeners for Search & Sidebar
+            const searchInput = document.getElementById('product-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterProducts);
+            }
 
-            if (applyPriceBtn) applyPriceBtn.addEventListener('click', filterProducts);
-            if (maxPriceInput) {
-                maxPriceInput.addEventListener('keypress', function (e) {
-                    if (e.key === 'Enter') filterProducts();
+            // Mobile Filter Logic
+            const sidebar = document.getElementById('filter-sidebar');
+            const toggleBtn = document.getElementById('filter-toggle');
+            const closeBtn = document.getElementById('close-filter');
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
                 });
             }
-            if (clearBtn) clearBtn.addEventListener('click', window.clearFilters);
+
+            if (closeBtn && sidebar) {
+                closeBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                });
+            }
 
             // Initial Render
             renderProducts(products);
