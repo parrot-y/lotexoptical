@@ -154,32 +154,17 @@
             /* Soft initial shadow */
         }
 
+        /* Product Card Hover */
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
-            border-color: rgba(0, 255, 170, 0.2);
-            /* Subtle green hint on hover */
-        }
-
-        .product-image-wrapper {
-            overflow: hidden;
-            position: relative;
-            background: #ffffff;
-            /* Clean white background like reference */
-            width: 100%;
-            aspect-ratio: 4/3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
         }
 
         /* Floor Shadow Effect */
         .product-image-wrapper::after {
             display: none;
         }
-
-
 
         /* Product Image & Hover Effect */
         .product-image-wrapper {
@@ -367,44 +352,35 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        /* === Remove stale/unused styles from old card design === */
         .product-header {
-            display: flex;
-            justify-content: center;
-            /* Center brand */
-            align-items: center;
-            margin-bottom: 0.5rem;
             display: none;
-            /* Hide top header, move info below name */
         }
 
-        .product-brand {
-            font-size: 0.75rem;
+
+
+        /* === Badge Styles (NEW, DISCOUNT) === */
+        .badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.5rem;
+            padding: 4px 10px;
+            border-radius: 4px;
         }
 
-        .price-tag {
-            font-weight: 700;
-            color: #00ac9a;
-            /* Teal/Green price color */
-            font-size: 1rem;
-            display: block;
-            margin-top: 0.5rem;
+        .badge.new {
+            background: #1a1a1a;
+            color: #ffffff;
         }
 
-        .product-name {
-            font-family: var(--font-heading);
-            font-size: 1rem;
-            margin-bottom: 0px;
-            line-height: 1.4;
-            color: #007bff;
-            /* Blue title color like reference */
-            font-weight: 700;
-            text-transform: uppercase;
+        .badge.discount {
+            background: var(--primary);
+            color: #fff;
         }
 
         .product-meta {
@@ -869,15 +845,29 @@
                     </aside>
 
                     <!-- PRODUCT GRID -->
-                    <div class="collection-content">
-                        <div class="results-info">
-                            <span id="results-count">Showing 0 results</span>
-                            <select
-                                style="border: none; background: transparent; font-family: var(--font-body); cursor: pointer;">
-                                <option>Sort by: Featured</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
+                    <div class="products-area">
+                        <!-- Premium Sort & Results Bar -->
+                        <div class="results-info"
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+                            <span id="results-count" style="font-size:0.9rem; color:#666; font-weight:500;">Showing
+                                results</span>
+                            <select id="sort-select" onchange="sortProducts(this.value)"
+                                style="border: 1px solid #eee; border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; cursor: pointer; font-family: var(--font-body); background: #fff;">
+                                <option value="featured">Sort by: Featured</option>
+                                <option value="price-asc">Price: Low → High</option>
+                                <option value="price-desc">Price: High → Low</option>
+                                <option value="new">Newest First</option>
                             </select>
+                        </div>
+                        <!-- Active Filter Pills (like Shopify) -->
+                        <div id="active-filters-bar"
+                            style="display:none; flex-wrap:wrap; gap:8px; margin-bottom:1.5rem; align-items:center;">
+                            <span
+                                style="font-size:0.8rem; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Active:</span>
+                            <span id="active-filter-pills" style="display:flex; flex-wrap:wrap; gap:8px;"></span>
+                            <button onclick="clearFilters()"
+                                style="font-size:0.75rem; color:#666; background:none; border:1px solid #ddd; border-radius:20px; padding:4px 12px; cursor:pointer;">Clear
+                                all</button>
                         </div>
                         <div class="products-grid" id="products-grid">
                             <!-- JS Populates this -->
@@ -1213,14 +1203,56 @@
                     return 0;
                 });
 
+                // Apply sort dropdown value
+                const sortVal = document.getElementById('sort-select')?.value || 'featured';
+                sorted.sort((a, b) => {
+                    if (sortVal === 'price-asc') return a.price - b.price;
+                    if (sortVal === 'price-desc') return b.price - a.price;
+                    if (sortVal === 'new') return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+                    return 0;
+                });
+
+                // Update active filter pills
+                updateActivePills(selectedBrands, selectedCategories, selectedGenders, searchQuery);
+
                 renderProducts(sorted);
             }
 
-            // Expose clearFilters globally for the onclick handler in empty state
+            // Expose clearFilters globally
             window.clearFilters = function () {
-                checkboxes.forEach(cb => cb.checked = false);
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 if (maxPriceInput) maxPriceInput.value = 15000;
+                const si = document.getElementById('product-search');
+                if (si) si.value = '';
                 filterProducts();
+            }
+
+            // Sort by dropdown
+            window.sortProducts = function (sortVal) {
+                filterProducts();
+            }
+
+            // Active filter pills
+            function updateActivePills(selectedBrands, selectedCategories, selectedGenders, searchQuery) {
+                const bar = document.getElementById('active-filters-bar');
+                const pillContainer = document.getElementById('active-filter-pills');
+                if (!bar || !pillContainer) return;
+
+                const pills = [];
+                if (searchQuery) pills.push({ label: `"${searchQuery}"`, clear: () => { document.getElementById('product-search').value = ''; filterProducts(); } });
+                selectedBrands.forEach(b => pills.push({ label: b, clear: () => { document.querySelector(`input[name="brand"][value="${b}"]`).checked = false; filterProducts(); } }));
+                selectedCategories.forEach(c => pills.push({ label: c, clear: () => { document.querySelector(`input[name="category"][value="${c}"]`).checked = false; filterProducts(); } }));
+                selectedGenders.forEach(g => pills.push({ label: g, clear: () => { document.querySelector(`input[name="gender"][value="${g}"]`).checked = false; filterProducts(); } }));
+
+                if (pills.length === 0) {
+                    bar.style.display = 'none';
+                    return;
+                }
+                bar.style.display = 'flex';
+                pillContainer.innerHTML = pills.map((p, i) =>
+                    `<span style="display:inline-flex;align-items:center;background:#f0f0f0;border-radius:20px;padding:4px 12px;font-size:0.78rem;font-weight:600;gap:6px;" data-pill-idx="${i}">${p.label}<span onclick="window._pillClears[${i}]()" style="cursor:pointer;font-size:1rem;line-height:1;color:#888;">×</span></span>`
+                ).join('');
+                window._pillClears = pills.map(p => p.clear);
             }
 
             // --- INIT ---
