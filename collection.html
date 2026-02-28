@@ -672,12 +672,28 @@
                     <aside class="filter-sidebar" id="filter-sidebar">
                         <div class="close-filter" id="close-filter"><i class="fas fa-times"></i></div>
 
-                        <!-- Search Bar (NEW) -->
+                        <!-- Search Bar -->
                         <div class="search-container">
-                            <div class="search-input-wrapper">
-                                <input type="text" id="product-search" class="search-input"
-                                    placeholder="Search frames, brands...">
-                                <i class="fas fa-search search-icon"></i>
+                            <div class="search-input-wrapper" style="display: flex; gap: 8px; align-items: center;">
+                                <div style="position: relative; flex: 1;">
+                                    <input type="text" id="product-search" class="search-input"
+                                        placeholder="Search frames, brands..." style="padding-right: 2.5rem;">
+                                    <i class="fas fa-search search-icon"></i>
+                                </div>
+                                <button id="search-go-btn" onclick="filterProducts()" style="
+                                    background: #1a1a1a;
+                                    color: white;
+                                    border: none;
+                                    padding: 10px 16px;
+                                    border-radius: 8px;
+                                    font-size: 0.8rem;
+                                    font-weight: 700;
+                                    cursor: pointer;
+                                    white-space: nowrap;
+                                    letter-spacing: 0.05em;
+                                    transition: all 0.2s ease;
+                                " onmouseover="this.style.background='var(--primary)'"
+                                    onmouseout="this.style.background='#1a1a1a'">GO</button>
                             </div>
                         </div>
 
@@ -1153,6 +1169,22 @@
             }
 
             // --- INIT ---
+            // Live search: filter as you type (debounced for performance)
+            const searchInput = document.getElementById('product-search');
+            let searchDebounce;
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(searchDebounce);
+                    searchDebounce = setTimeout(filterProducts, 180);
+                });
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        clearTimeout(searchDebounce);
+                        filterProducts();
+                    }
+                });
+            }
+
             if (brandFilterContainer) {
                 brands.sort().forEach(brand => {
                     const label = document.createElement('label');
@@ -1177,19 +1209,14 @@
             const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
             allCheckboxes.forEach(cb => cb.addEventListener('change', filterProducts));
 
-            // Event Listeners for Search & Sidebar
-            const searchInput = document.getElementById('product-search');
-            if (searchInput) {
-                searchInput.addEventListener('input', filterProducts);
-            }
-
             if (applyPriceBtn) applyPriceBtn.addEventListener('click', filterProducts);
-            if (maxPriceInput) {
-                maxPriceInput.addEventListener('keypress', function (e) {
-                    if (e.key === 'Enter') filterProducts();
-                });
-            }
-            if (clearBtn) clearBtn.addEventListener('click', window.clearFilters);
+            if (clearBtn) clearBtn.addEventListener('click', () => {
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                if (maxPriceInput) maxPriceInput.value = 15000;
+                const si = document.getElementById('product-search');
+                if (si) si.value = '';
+                filterProducts();
+            });
 
             // Mobile Filter Logic
             const sidebar = document.getElementById('filter-sidebar');
