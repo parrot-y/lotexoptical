@@ -22,3 +22,7 @@ const products = [
     { id: 'frame-swatch', brand: 'Swatch', name: 'Colorful Round Frame', price: 3500, image: 'assets/frames/swatch.jpg', hoverImage: 'assets/frames/swatch1.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Round', material: 'Plastic', isNew: true, rating: 4.5, reviews: 8, lensFeatures: [], tags: ['Unisex', 'Round', 'Eyeglasses', 'Swatch'] },
     { id: 'frame-verona', brand: 'Verona', name: 'Italian Cat Eye Frame', price: 7000, image: 'assets/frames/verona.jpg', hoverImage: 'assets/frames/verona1.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Cat Eye', material: 'Acetate', isNew: true, rating: 4.8, reviews: 14, lensFeatures: [], tags: ['Women', 'Cat Eye', 'Eyeglasses', 'Verona'] }
 ];
+
+const brands = [...new Set(products.filter(p => !p.isRaw).map(p => p.brand))];
+const categories = [...new Set(products.map(p => p.category))];
+const shapes = [...new Set(products.filter(p => p.shape).map(p => p.shape))];

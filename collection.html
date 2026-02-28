@@ -603,7 +603,8 @@
         /* Mobile (max 600px): Single column grid for larger cards */
         @media (max-width: 600px) {
             .products-grid {
-                grid-template-columns: 1fr; /* Single column for maximum image size */
+                grid-template-columns: 1fr;
+                /* Single column for maximum image size */
                 gap: 2rem;
             }
         }
@@ -1320,20 +1321,16 @@
 
             // Mobile Filter Logic
             const sidebar = document.getElementById('filter-sidebar');
-            const toggleBtn = document.getElementById('filter-toggle');
+            const toggleBtn = document.getElementById('filter-toggle'); // This matches common button id
+            const mobileFilterBtn = document.querySelector('.mobile-filter-toggle'); // Backup if id doesn't match
             const closeBtn = document.getElementById('close-filter');
 
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener('click', () => {
-                    sidebar.classList.add('active');
-                });
-            }
+            const openSidebar = () => { if (sidebar) sidebar.classList.add('active'); };
+            const closeSidebar = () => { if (sidebar) sidebar.classList.remove('active'); };
 
-            if (closeBtn && sidebar) {
-                closeBtn.addEventListener('click', () => {
-                    sidebar.classList.remove('active');
-                });
-            }
+            if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+            if (mobileFilterBtn) mobileFilterBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
 
             // Initial Render (Sorted)
             filterProducts();
