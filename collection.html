@@ -708,8 +708,12 @@
                             <div class="search-input-wrapper" style="display: flex; gap: 8px; align-items: center;">
                                 <div style="position: relative; flex: 1;">
                                     <input type="text" id="product-search" class="search-input"
-                                        placeholder="Search frames, brands..." style="padding-right: 2.5rem;">
+                                        placeholder="Search frames, brands..." style="padding-right: 2.5rem;"
+                                        list="search-suggestions">
                                     <i class="fas fa-search search-icon"></i>
+                                    <datalist id="search-suggestions">
+                                        <!-- Populated via JS -->
+                                    </datalist>
                                 </div>
                                 <button id="search-go-btn" onclick="filterProducts()" style="
                                     background: #1a1a1a;
@@ -1107,10 +1111,38 @@
                 const wishlist = getWishlist();
                 const isSaved = wishlist.includes(product.id);
 
-                // Hover Image Logic
-                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">`;
-                if (!product.isRaw && product.hoverImage) {
-                    imageHTML += `<img src="${product.hoverImage}" alt="${product.name} on model" class="${imgClass} hover-img" loading="lazy">`;
+                // Carousel Logic for Mobile
+                const hasModelImg = !product.isRaw && product.hoverImage;
+                let carouselHTML = '';
+
+                if (hasModelImg) {
+                    carouselHTML = `
+                        <div class="card-carousel">
+                            <div class="card-carousel-item">
+                                <img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">
+                            </div>
+                            <div class="card-carousel-item">
+                                <img src="${product.hoverImage}" alt="${product.name} on model" class="${imgClass} hover-img" loading="lazy">
+                            </div>
+                        </div>
+                        <div class="carousel-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                        </div>
+                    `;
+                } else {
+                    carouselHTML = `
+                        <img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">
+                        ${!product.isRaw ? `
+                        <div class="card-carousel mobile-only">
+                            <div class="card-carousel-item"><img src="${product.image}" alt="${product.name}" class="${imgClass}" loading="lazy"></div>
+                            <div class="card-carousel-item"><img src="assets/img/lotex_logo.png" alt="Lotex Brand" style="width:50%; object-fit:contain;" loading="lazy"></div>
+                        </div>
+                        <div class="carousel-dots mobile-only">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                        </div>` : ''}
+                    `;
                 }
 
                 const ratingRow = product.rating ? `
@@ -1125,7 +1157,7 @@
                     <div class="${wrapperClass}" style="cursor:pointer;" onclick="window.location.href='product.html?id=${product.id}'">
                         ${isNewBadge}
                         ${discount}
-                        ${imageHTML}
+                        ${carouselHTML}
                         <!-- Wishlist Heart -->
                         <button class="card-heart-btn ${isSaved ? 'saved' : ''}" data-pid="${product.id}" title="Save to wishlist"
                             style="position:absolute;top:10px;right:10px;z-index:10;background:white;border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:all 0.2s ease;">
@@ -1165,12 +1197,36 @@
                     return;
                 }
 
+                if (items.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:4rem; color:#888;">
+                            <i class="fas fa-search" style="font-size:3rem; margin-bottom:1.5rem; opacity:0.3;"></i>
+                            <h3 style="font-family:var(--font-heading); color:#1a1a1a; margin-bottom:0.5rem;">No products match your search</h3>
+                            <p>Try adjusting your filters or search terms.</p>
+                            <button onclick="clearFilters()" class="btn btn-primary" style="margin-top:1.5rem; text-transform:uppercase; font-size:0.75rem;">Clear All Filters</button>
+                        </div>
+                    `;
+                    return;
+                }
+
                 items.forEach(product => {
                     const cardHTML = createProductCard(product);
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = cardHTML;
                     const card = tempDiv.firstElementChild;
                     grid.appendChild(card);
+
+                    // Carousel Dot Logic (Mobile)
+                    const carousel = card.querySelector('.card-carousel');
+                    const dots = card.querySelectorAll('.dot');
+                    if (carousel && dots.length > 0) {
+                        carousel.addEventListener('scroll', () => {
+                            const index = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+                            dots.forEach((dot, i) => {
+                                dot.classList.toggle('active', i === index);
+                            });
+                        });
+                    }
 
                     // Heart/wishlist button — stop propagation so it doesn't open product page
                     const heartBtn = card.querySelector('.card-heart-btn');
@@ -1327,6 +1383,22 @@
             }
 
             if (brandFilterContainer) {
+                // Populate Search Suggestions
+                const suggestionsList = document.getElementById('search-suggestions');
+                const uniqueSuggestions = new Set();
+                products.forEach(p => {
+                    uniqueSuggestions.add(p.brand);
+                    uniqueSuggestions.add(p.category);
+                });
+
+                if (suggestionsList) {
+                    uniqueSuggestions.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s;
+                        suggestionsList.appendChild(opt);
+                    });
+                }
+
                 brands.sort().forEach(brand => {
                     const label = document.createElement('label');
                     label.className = 'filter-checkbox';

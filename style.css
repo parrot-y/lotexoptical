@@ -587,23 +587,90 @@ ul {
     color: var(--text-main);
 }
 
-.category-img-wrapper {
-    border-radius: 40px;
+/* Product Card Carousel & Image Fitting */
+.product-image-wrapper {
+    position: relative;
     overflow: hidden;
-    height: 350px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.category-img {
-    width: auto;
-    height: 90%;
-    max-width: 80%;
-    object-fit: contain;
-    transform: rotate(-90deg);
-    /* Rotate horizontal */
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15)) contrast(1.2) brightness(1.1);
-    /* Shadow + Blend fix */
-    /* Add shadow since it floats */
+@media (max-width: 768px) {
+    .product-image-wrapper {
+        aspect-ratio: 1/1;
+        /* Square on mobile for better fit */
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Fill the card nicely */
+    }
+
+    /* Carousel styling */
+    .card-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        /* Hide scrollbar Firefox */
+        -ms-overflow-style: none;
+        /* Hide scrollbar IE/Edge */
+    }
+
+    .card-carousel::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar Chrome/Safari */
+    }
+
+    .card-carousel-item {
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-dots {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        z-index: 5;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+
+    .dot.active {
+        background: var(--primary);
+        width: 12px;
+        border-radius: 4px;
+    }
+
+    .mobile-only {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
 }
 
 /* Footer */
