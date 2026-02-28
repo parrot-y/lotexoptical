@@ -18,8 +18,8 @@
         content="Explore the full collection of premium frames at Lotex Opticals. Find the perfect fit from our wide range of eyeglasses and sunglasses.">
     <meta property="og:title" content="Our Collection | Lotex Opticals">
     <meta property="og:description" content="Explore our premium range of frames in Kiambu Town.">
-    <meta property="og:image" content="https://lotexopticals.co.ke/assets/img/lotex_logo.png">
-    <meta property="og:url" content="https://lotexopticals.co.ke/collection.html">
+    <meta property="og:image" content="https://lotexopticals.com/assets/img/lotex_logo.png">
+    <meta property="og:url" content="https://lotexopticals.com/collection.html">
     <style>
         /* Collection Specific Styles */
         .page-header {
@@ -185,7 +185,14 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            transition: transform 0.4s ease;
+            /* Contain is safer for frames to avoid cropping */
+            padding: 10px;
+            /* Slight breathing room for high-end look */
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
         }
 
         /* Frame main image: clean, no rotation */
@@ -201,8 +208,11 @@
         }
 
         .product-card:hover .product-image.main-img {
-            transform: scale(1.04);
             opacity: 0;
+        }
+
+        .product-card:hover .product-actions {
+            display: none;
         }
 
         .product-image.hover-img {
@@ -254,21 +264,10 @@
             display: none;
         }
 
+        .product-actions,
         .wishlist-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 35px;
-            height: 35px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: var(--transition);
-            z-index: 10;
+            display: none !important;
+            /* Removing bad icons as requested */
         }
 
         .wishlist-icon:hover {
@@ -277,9 +276,80 @@
         }
 
         .product-info {
-            padding: 1.5rem;
-            text-align: center;
-            /* Center align text */
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+            /* Premium left align */
+        }
+
+        .product-meta-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-name {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            font-weight: 700;
+        }
+
+        .category-pill {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            background: #f4f4f4;
+            padding: 4px 12px;
+            border-radius: 100px;
+            letter-spacing: 0.05em;
+            color: #777;
+            font-weight: 700;
+            border: 1px solid #eee;
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .product-footer {
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-tag {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .inquiry-button {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .inquiry-button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .product-header {
@@ -953,7 +1023,6 @@
                 const imgClass = product.isRaw ? 'product-image raw-style' : 'product-image';
                 const rotateClass = '';
 
-
                 // Hover Image Logic - Only for frames, not raw lenses
                 let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} ${rotateClass} main-img" loading="lazy">`;
                 if (!product.isRaw && product.hoverImage) {
@@ -966,21 +1035,17 @@
                         ${isNewBadge}
                         ${discount}
                         ${imageHTML}
-                        <div class="product-actions">
-                            <button class="action-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
-                            <button class="action-btn" title="Quick View"><i class="far fa-eye"></i></button>
-                        </div>
                     </div>
                     <div class="product-info">
-                        <h3 class="product-name">${product.brand} ${product.name}</h3>
-                        <div class="product-meta">
-                            <span class="meta-tag" style="background:#eef; color:#33d;">${product.category}</span>
+                        <div class="product-meta-top">
+                            <span class="brand-name">${product.brand}</span>
+                            <span class="category-pill">${product.category}</span>
                         </div>
-                        <span class="price-tag">KES ${product.price.toLocaleString()}</span> 
-                        
-                        <a href="#" class="btn btn-outline-white btn-whatsapp" style="width: 100%; margin-top: 1rem; border: 1px solid var(--text-main); color: var(--text-main);">
-                            INQUIRE
-                        </a>
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-footer">
+                            <span class="price-tag">KES ${product.price.toLocaleString()}</span>
+                            <button class="inquiry-button">INQUIRE</button>
+                        </div>
                     </div>
                 </div>
                 `;
@@ -1007,11 +1072,11 @@
                     const card = tempDiv.firstElementChild;
                     grid.appendChild(card);
 
-                    const btn = card.querySelector('.btn-whatsapp');
+                    const btn = card.querySelector('.inquiry-button');
                     if (btn) {
                         btn.addEventListener('click', (e) => {
                             e.preventDefault();
-                            const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} for ${product.gender} (Ref: ${product.id}), Price: KES ${product.price}`);
+                            const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} (Ref: ${product.id}), Price: KES ${product.price}`);
                             window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
                         });
                     }
@@ -1027,12 +1092,11 @@
             }
 
             function filterProducts() {
-                const searchQuery = document.getElementById('product-search')?.value.toLowerCase() || '';
+                const searchQuery = document.getElementById('product-search')?.value.toLowerCase().trim() || '';
                 const selectedGenders = Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value);
                 const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
                 const selectedShapes = Array.from(document.querySelectorAll('input[name="shape"]:checked')).map(cb => cb.value);
                 const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
-                const selectedLens = Array.from(document.querySelectorAll('input[name="lens"]:checked')).map(cb => cb.value);
                 const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
                 const filtered = products.filter(item => {
@@ -1051,16 +1115,30 @@
                     const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
                     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
                     const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
-                    const lensMatch = selectedLens.length === 0 || selectedLens.some(l => item.lensFeatures.includes(l));
                     const priceMatch = item.price <= maxPrice;
 
-                    return searchMatch && genderMatch && brandMatch && shapeMatch && categoryMatch && lensMatch && priceMatch;
+                    return searchMatch && genderMatch && brandMatch && shapeMatch && categoryMatch && priceMatch;
                 });
 
-                // Sort: Frames (!isRaw) first, Lenses (isRaw) at the bottom
+                // Sort: Selected Brand / Featured first, then other Frames, then Lenses
                 const sorted = filtered.sort((a, b) => {
+                    // Raw always at bottom
                     if (a.isRaw && !b.isRaw) return 1;
                     if (!a.isRaw && b.isRaw) return -1;
+
+                    // If a specific brand is selected, prioritize it (though the filter usually handles this, 
+                    // this helps if multiple filters or search are mixed)
+                    if (selectedBrands.length > 0) {
+                        const aMatch = selectedBrands.includes(a.brand);
+                        const bMatch = selectedBrands.includes(b.brand);
+                        if (aMatch && !bMatch) return -1;
+                        if (!aMatch && bMatch) return 1;
+                    }
+
+                    // Prioritize "New" items as featured
+                    if (a.isNew && !b.isNew) return -1;
+                    if (!a.isNew && b.isNew) return 1;
+
                     return 0;
                 });
 

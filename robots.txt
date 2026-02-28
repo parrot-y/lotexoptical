@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lotexopticals.co.ke/sitemap.xml
+Sitemap: https://lotexopticals.com/sitemap.xml
