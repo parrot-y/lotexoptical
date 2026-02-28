@@ -607,12 +607,17 @@ ul {
 .product-image-wrapper {
     position: relative;
     overflow: hidden;
-    background: #fff;
+    background: #f0f0f0;
     width: 100%;
     aspect-ratio: 4/3;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Multiply blend mode makes white paper backgrounds disappear */
+.product-image:not(.raw-style) {
+    mix-blend-mode: multiply;
 }
 
 @media (max-width: 768px) {

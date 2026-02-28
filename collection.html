@@ -828,16 +828,22 @@
                                     <input type="checkbox" name="shape" value="Aviator"> Aviator
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" name="shape" value="Wayfarer"> Wayfarer
-                                </label>
-                                <label class="filter-checkbox">
                                     <input type="checkbox" name="shape" value="Round"> Round
                                 </label>
                                 <label class="filter-checkbox">
                                     <input type="checkbox" name="shape" value="Square"> Square
                                 </label>
                                 <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Rectangle"> Rectangle
+                                </label>
+                                <label class="filter-checkbox">
                                     <input type="checkbox" name="shape" value="Cat Eye"> Cat Eye
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Oval"> Oval
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="shape" value="Wayfarer"> Wayfarer
                                 </label>
                             </div>
                         </div>
@@ -1159,22 +1165,24 @@
                 const maxPrice = maxPriceInput ? (parseInt(maxPriceInput.value) || 100000) : 100000;
 
                 const filtered = products.filter(item => {
-                    // Lenses (isRaw) bypass most filters to stay visible at the bottom
+                    // Search match (applies to everything)
+                    const searchableText = `${item.brand} ${item.name} ${item.category} ${item.gender || ''} ${item.shape || ''}`.toLowerCase();
+                    const searchMatch = !searchQuery || searchableText.includes(searchQuery);
+                    const priceMatch = item.price <= maxPrice;
+
+                    // Lenses (isRaw) only filter by search, category, and price
                     if (item.isRaw) {
-                        const searchMatch = !searchQuery || `${item.brand} ${item.name}`.toLowerCase().includes(searchQuery);
-                        const priceMatch = item.price <= maxPrice;
-                        return searchMatch && priceMatch;
+                        const lensCategory = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+                        // Hide lenses if gender/shape/brand filters are active (lenses have no gender/shape)
+                        const noFrameFilters = selectedGenders.length === 0 && selectedShapes.length === 0 && selectedBrands.length === 0;
+                        return searchMatch && priceMatch && lensCategory && noFrameFilters;
                     }
 
-                    // Search Match for Frames
-                    const searchableText = `${item.brand} ${item.name} ${item.category} ${item.gender} ${item.shape}`.toLowerCase();
-                    const searchMatch = !searchQuery || searchableText.includes(searchQuery);
-
+                    // Frame filters
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
                     const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(item.gender);
                     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
                     const shapeMatch = selectedShapes.length === 0 || selectedShapes.includes(item.shape);
-                    const priceMatch = item.price <= maxPrice;
 
                     return searchMatch && genderMatch && brandMatch && shapeMatch && categoryMatch && priceMatch;
                 });
