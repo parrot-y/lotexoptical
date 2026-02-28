@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | Lotex Opticals</title>
+    <meta name="description" content="View detailed product information for Lotex Opticals frames and lenses.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #00d4a8;
+            --primary-dark: #00a882;
+            --secondary: #00ac9a;
+            --text-main: #1a1a1a;
+            --text-muted: #888;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Outfit', sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-main);
+            background: #fafafa;
+        }
+
+        /* ======= BREADCRUMB ======= */
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.82rem;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .breadcrumb span {
+            color: #ccc;
+        }
+
+        /* ======= PRODUCT LAYOUT ======= */
+        .product-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            padding: 2rem 0 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1rem 0 3rem;
+            }
+        }
+
+        /* ======= IMAGE GALLERY ======= */
+        .gallery-main {
+            aspect-ratio: 4/3;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            border: 2px solid #f0f0f0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .gallery-thumb.active,
+        .gallery-thumb:hover {
+            border-color: var(--primary);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 6px;
+        }
+
+        /* ======= PRODUCT INFO ======= */
+        .product-detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-brand-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-brand {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            font-weight: 700;
+        }
+
+        .detail-category-pill {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 100px;
+            letter-spacing: 0.05em;
+            color: #666;
+            font-weight: 700;
+        }
+
+        .detail-title {
+            font-family: var(--font-heading);
+            font-size: 2.4rem;
+            line-height: 1.15;
+            color: var(--text-main);
+            font-weight: 900;
+        }
+
+        @media (max-width: 768px) {
+            .detail-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Rating Stars */
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+            color: #f5a623;
+            font-size: 0.9rem;
+        }
+
+        .rating-count {
+            font-size: 0.82rem;
+            color: #999;
+        }
+
+        /* Price */
+        .detail-price {
+            font-family: var(--font-body);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        /* Availability badge */
+        .availability {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .availability i {
+            font-size: 0.7rem;
+        }
+
+        /* Spec table */
+        .spec-table {
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .spec-row {
+            display: flex;
+            border-bottom: 1px solid #f8f8f8;
+        }
+
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+
+        .spec-key {
+            width: 120px;
+            min-width: 120px;
+            padding: 12px 16px;
+            background: #fafafa;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #999;
+            font-weight: 700;
+        }
+
+        .spec-val {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* CTA Buttons */
+        .cta-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-whatsapp-cta {
+            flex: 1;
+            min-width: 200px;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-whatsapp-cta:hover {
+            background: #1ebe57;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+        }
+
+        .btn-wishlist-detail {
+            background: white;
+            border: 1.5px solid #e0e0e0;
+            color: #444;
+            padding: 16px 22px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-wishlist-detail:hover,
+        .btn-wishlist-detail.saved {
+            border-color: #e91e63;
+            color: #e91e63;
+        }
+
+        /* Notice */
+        .product-notice {
+            background: #f0faf8;
+            border: 1px solid #b2dfdb;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 0.83rem;
+            color: #2e7d6b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ======= RELATED PRODUCTS ======= */
+        .related-section {
+            padding: 3rem 0 5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .related-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .related-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+        }
+
+        .see-all-link {
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .related-img-wrapper {
+            height: 160px;
+            background: white;
+            overflow: hidden;
+            border-bottom: 1px solid #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .related-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            transition: transform 0.4s ease;
+        }
+
+        .related-card:hover .related-img-wrapper img {
+            transform: scale(1.06);
+        }
+
+        .related-info {
+            padding: 14px;
+        }
+
+        .related-brand {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #999;
+            font-weight: 700;
+        }
+
+        .related-name {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            margin: 4px 0 8px;
+            color: #1a1a1a;
+        }
+
+        .related-price {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        /* Header ref */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .align-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .logo img {
+            height: 55px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .header-actions .btn-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container flex align-center justify-between">
+            <a href="index.html" class="logo flex align-center">
+                <img src="assets/img/lotex_logo.png" alt="Lotex Opticals">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="collection.html">Collection</a></li>
+                <li><a href="index.html#trending">New Arrivals</a></li>
+                <li><a href="index.html#perfect-fit">Our Clinic</a></li>
+                <li><a href="index.html#footer">Contact</a></li>
+            </ul>
+            <div class="header-actions">
+                <a href="#" class="btn btn-primary btn-sm btn-whatsapp" id="header-whatsapp">
+                    <i class="fab fa-whatsapp"></i> <span class="btn-text">INQUIRE</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <a href="collection.html">Collection</a>
+                <span>/</span>
+                <span id="breadcrumb-name">Loading...</span>
+            </nav>
+
+            <!-- Product Layout -->
+            <div class="product-layout">
+                <!-- Left: Gallery -->
+                <div class="gallery-side">
+                    <div class="gallery-main">
+                        <img id="gallery-main-img" src="" alt="Product" loading="eager">
+                    </div>
+                    <div class="gallery-thumbs" id="gallery-thumbs"></div>
+                </div>
+
+                <!-- Right: Info -->
+                <div class="product-detail-info">
+                    <div class="detail-brand-row">
+                        <span class="detail-brand" id="detail-brand">--</span>
+                        <span class="detail-category-pill" id="detail-category">--</span>
+                    </div>
+
+                    <h1 class="detail-title" id="detail-title">Loading...</h1>
+
+                    <div class="rating-row" id="rating-row">
+                        <div class="stars" id="stars-html"><!-- Stars --></div>
+                        <span class="rating-count" id="rating-count"></span>
+                    </div>
+
+                    <span class="detail-price" id="detail-price">--</span>
+
+                    <div class="availability">
+                        <i class="fas fa-circle-check"></i>
+                        <span id="availability-text">In Stock — Ready to Order</span>
+                    </div>
+
+                    <!-- Spec Table -->
+                    <div class="spec-table" id="spec-table"></div>
+
+                    <!-- CTA Buttons -->
+                    <div class="cta-group">
+                        <button class="btn-whatsapp-cta" id="inquire-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            Inquire on WhatsApp
+                        </button>
+                        <button class="btn-wishlist-detail" id="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                            Save
+                        </button>
+                    </div>
+
+                    <div class="product-notice">
+                        <i class="fas fa-info-circle"></i>
+                        Prices are frame-only. Lens fitting is done in our Kiambu clinic. Walk-in or inquire via
+                        WhatsApp.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <div class="related-section">
+                <div class="related-header">
+                    <h2 class="related-title">You May Also Like</h2>
+                    <a href="collection.html" class="see-all-link">See All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="related-grid" id="related-grid">
+                    <!-- JS populates -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        // ===== PRODUCT DATA (mirrors collection.html) =====
+        const products = [
+            { id: 'lens-prog-trans', image: 'assets/lenses/progressive_transition.png', brand: 'Lotex', name: 'Progressive Transition Lens', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 7999, category: 'Eyeglasses', isRaw: true, rating: 4.9, reviews: 22 },
+            { id: 'lens-prog-blue-cut', image: 'assets/lenses/progressive_blue_cut_clear.png', brand: 'Lotex', name: 'Progressive Blue Cut Clear', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 8999, category: 'Eyeglasses', isRaw: true, rating: 4.8, reviews: 18 },
+            { id: 'lens-photo-gray-prog-blue-cut', image: 'assets/lenses/photo_gray_progressive_blue_cut.png', brand: 'Lotex', name: 'Photo Gray Progressive Blue Cut', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 12000, category: 'Eyeglasses', isRaw: true, rating: 4.9, reviews: 10 },
+            { id: 'lens-bifocal', image: 'assets/lenses/bifocal.png', brand: 'Lotex', name: 'Bifocal Lens', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 3999, category: 'Eyeglasses', isRaw: true, rating: 4.6, reviews: 14 },
+            { id: 'lens-blue-cut-single', image: 'assets/lenses/blue_cut_single_vision.png', brand: 'Lotex', name: 'Blue Cut Single Vision', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 3999, category: 'Eyeglasses', isRaw: true, rating: 4.7, reviews: 30 },
+            { id: 'lens-photo-gray-blue-coat', image: 'assets/lenses/photo_gray_blue_coating.png', brand: 'Lotex', name: 'Photo Gray Blue Coating', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 2500, category: 'Eyeglasses', isRaw: true, rating: 4.5, reviews: 8 },
+            { id: 'lens-blue-cut-clear', image: 'assets/lenses/blue_cut_clear.png', brand: 'Lotex', name: 'Blue Cut Clear', shape: 'Round', gender: 'Unisex', material: 'Glass', price: 2500, category: 'Eyeglasses', isRaw: true, rating: 4.4, reviews: 12 },
+            { id: 'frame-ox-embery', brand: 'Ox Embery', name: 'Classic Square', price: 6000, image: 'assets/frames/Ox embery.jpg', hoverImage: 'assets/model_images/model_ox_embery.png', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: true, rating: 4.8, reviews: 12 },
+            { id: 'frame-eyelid', brand: 'Eyelid', name: 'Modern Rect', price: 6000, image: 'assets/frames/eyelid.jpg', hoverImage: 'assets/model_images/model_eyelid.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.5, reviews: 8 },
+            { id: 'frame-gabiano', brand: 'Gabiano', name: 'Elegant Round', price: 5000, image: 'assets/frames/gabiano.jpg', hoverImage: 'assets/model_images/model_gabiano.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Mix', isNew: true, rating: 4.9, reviews: 15 },
+            { id: 'frame-kc-kalla', brand: 'Kc Kalla', name: 'Urban Style', price: 3000, image: 'assets/frames/kalla.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.2, reviews: 5 },
+            { id: 'frame-million', brand: 'Million', name: 'Luxury Aviator', price: 4000, image: 'assets/frames/million.jpg', hoverImage: 'assets/model_images/model_million.png', category: 'Sunglasses', gender: 'Men', shape: 'Aviator', material: 'Metal', isNew: true, rating: 4.7, reviews: 20 },
+            { id: 'frame-danmac', brand: 'Danmac', name: 'Bold Frame', price: 4500, image: 'assets/frames/Danmac.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Square', material: 'Acetate', isNew: false, rating: 4.3, reviews: 6 },
+            { id: 'frame-boivie', brand: 'Boivie', name: 'Slim Profile', price: 5000, image: 'assets/frames/boivie.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.4, reviews: 7 },
+            { id: 'frame-caballo', brand: 'Caballo', name: 'Classic Design', price: 4000, image: 'assets/frames/caballo.jpg', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Metal', isNew: false, rating: 4.3, reviews: 5 },
+            { id: 'frame-humphreys', brand: 'Humphreys', name: 'Executive Style', price: 5500, image: 'assets/frames/humphreys.jpg', hoverImage: 'assets/model_images/model_humphreys.png', category: 'Eyeglasses', gender: 'Men', shape: 'Rectangle', material: 'Titanium', isNew: false, rating: 4.6, reviews: 9 },
+            { id: 'frame-studiomuku', brand: 'Studio Muku', name: 'Artistic Frame', price: 6000, image: 'assets/frames/studiomuku.jpg', hoverImage: 'assets/model_images/model_studiomuku.png', category: 'Eyeglasses', gender: 'Women', shape: 'Round', material: 'Acetate', isNew: true, rating: 4.7, reviews: 11 },
+            { id: 'frame-swatch', brand: 'Swatch', name: 'Colorful Pop', price: 3500, image: 'assets/frames/swatch.jpg', category: 'Eyeglasses', gender: 'Unisex', shape: 'Round', material: 'Plastic', isNew: true, rating: 4.5, reviews: 8 },
+            { id: 'frame-verona', brand: 'Verona', name: 'Italian Style', price: 7000, image: 'assets/frames/verona.jpg', category: 'Eyeglasses', gender: 'Women', shape: 'Cat Eye', material: 'Acetate', isNew: true, rating: 4.8, reviews: 14 }
+        ];
+
+        // ===== LOAD PRODUCT FROM URL =====
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+        const product = products.find(p => p.id === productId);
+
+        function starsHTML(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let html = '';
+            for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+            if (half) html += '<i class="fas fa-star-half-alt"></i>';
+            for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
+            return html;
+        }
+
+        if (product) {
+            document.title = `${product.brand} ${product.name} | Lotex Opticals`;
+            document.getElementById('breadcrumb-name').textContent = product.name;
+            document.getElementById('detail-brand').textContent = product.brand;
+            document.getElementById('detail-category').textContent = product.category;
+            document.getElementById('detail-title').textContent = product.name;
+            document.getElementById('detail-price').textContent = `KES ${product.price.toLocaleString()}`;
+
+            // Stars
+            if (product.rating) {
+                document.getElementById('stars-html').innerHTML = starsHTML(product.rating);
+                document.getElementById('rating-count').textContent = `${product.rating} (${product.reviews || 0} reviews)`;
+            }
+
+            // Gallery - main + model image as second thumb
+            const mainImg = document.getElementById('gallery-main-img');
+            mainImg.src = product.image;
+            mainImg.alt = `${product.brand} ${product.name}`;
+
+            const thumbContainer = document.getElementById('gallery-thumbs');
+            const thumbImages = [product.image];
+            if (product.hoverImage) thumbImages.push(product.hoverImage);
+
+            thumbImages.forEach((src, i) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'gallery-thumb' + (i === 0 ? ' active' : '');
+                thumb.innerHTML = `<img src="${src}" alt="View ${i + 1}">`;
+                thumb.addEventListener('click', () => {
+                    mainImg.style.opacity = '0';
+                    setTimeout(() => {
+                        mainImg.src = src;
+                        mainImg.style.opacity = '1';
+                    }, 150);
+                    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                });
+                thumbContainer.appendChild(thumb);
+            });
+
+            // Spec table
+            const specs = [
+                { key: 'Brand', val: product.brand },
+                { key: 'Category', val: product.category },
+                { key: 'Shape', val: product.shape || '—' },
+                { key: 'Gender', val: product.gender || '—' },
+                { key: 'Material', val: product.material || '—' },
+                { key: 'Type', val: product.isRaw ? 'Lens Only' : 'Frame' }
+            ];
+            document.getElementById('spec-table').innerHTML = specs.map(s =>
+                `<div class="spec-row"><div class="spec-key">${s.key}</div><div class="spec-val">${s.val}</div></div>`
+            ).join('');
+
+            // WhatsApp CTA
+            document.getElementById('inquire-btn').addEventListener('click', () => {
+                const msg = encodeURIComponent(`Hi Lotex! I'm interested in: ${product.brand} ${product.name} — KES ${product.price.toLocaleString()} (Ref: ${product.id}). Can you help me?`);
+                window.open(`https://wa.me/254722361831?text=${msg}`, '_blank');
+            });
+            document.getElementById('header-whatsapp').href = `https://wa.me/254722361831?text=${encodeURIComponent(`Hi Lotex! Inquiry about ${product.brand} ${product.name}`)}`;
+
+            // Wishlist
+            const wishlistBtn = document.getElementById('wishlist-btn');
+            const saved = JSON.parse(localStorage.getItem('lotex_wishlist') || '[]');
+            const isSaved = saved.includes(product.id);
+            if (isSaved) {
+                wishlistBtn.classList.add('saved');
+                wishlistBtn.innerHTML = '<i class="fas fa-heart"></i> Saved';
+            }
+            wishlistBtn.addEventListener('click', () => {
+                let list = JSON.parse(localStorage.getItem('lotex_wishlist') || '[]');
+                if (list.includes(product.id)) {
+                    list = list.filter(id => id !== product.id);
+                    wishlistBtn.classList.remove('saved');
+                    wishlistBtn.innerHTML = '<i class="far fa-heart"></i> Save';
+                } else {
+                    list.push(product.id);
+                    wishlistBtn.classList.add('saved');
+                    wishlistBtn.innerHTML = '<i class="fas fa-heart"></i> Saved';
+                }
+                localStorage.setItem('lotex_wishlist', JSON.stringify(list));
+            });
+
+            // Related products (same category, exclude self)
+            const related = products.filter(p => p.id !== product.id && p.category === product.category && !p.isRaw).slice(0, 4);
+            const relatedGrid = document.getElementById('related-grid');
+            if (related.length === 0) {
+                relatedGrid.parentElement.style.display = 'none';
+            } else {
+                relatedGrid.innerHTML = related.map(p => `
+                    <a class="related-card" href="product.html?id=${p.id}">
+                        <div class="related-img-wrapper">
+                            <img src="${p.image}" alt="${p.name}" loading="lazy">
+                        </div>
+                        <div class="related-info">
+                            <div class="related-brand">${p.brand}</div>
+                            <div class="related-name">${p.name}</div>
+                            <div class="related-price">KES ${p.price.toLocaleString()}</div>
+                        </div>
+                    </a>
+                `).join('');
+            }
+        } else {
+            // Product not found
+            document.querySelector('.product-layout').innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:4rem;">
+                    <i class="fas fa-exclamation-circle" style="font-size:3rem;color:#ccc;margin-bottom:1rem;display:block;"></i>
+                    <h2>Product not found</h2>
+                    <a href="collection.html" class="btn btn-primary" style="margin-top:1.5rem;display:inline-flex;">Back to Collection</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

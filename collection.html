@@ -1076,36 +1076,75 @@
             const applyPriceBtn = document.getElementById('apply-price');
             const clearBtn = document.getElementById('clear-filters');
 
+            // --- WISHLIST HELPERS ---
+            function getWishlist() { return JSON.parse(localStorage.getItem('lotex_wishlist') || '[]'); }
+            function toggleWishlist(id) {
+                let list = getWishlist();
+                if (list.includes(id)) list = list.filter(i => i !== id);
+                else list.push(id);
+                localStorage.setItem('lotex_wishlist', JSON.stringify(list));
+                return list.includes(id);
+            }
+
+            function starsHTML(rating) {
+                if (!rating) return '';
+                const full = Math.floor(rating);
+                const half = rating % 1 >= 0.5;
+                let html = '<span style="color:#f5a623;font-size:0.7rem;">';
+                for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+                if (half) html += '<i class="fas fa-star-half-alt"></i>';
+                for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
+                html += `</span><span style="font-size:0.72rem;color:#999;margin-left:4px;">(${rating})</span>`;
+                return html;
+            }
+
             // --- FUNCTIONS ---
             function createProductCard(product) {
                 const isNewBadge = product.isNew ? '<span class="badge new">New</span>' : '';
                 const discount = product.originalPrice ? `<span class="badge discount">-${Math.round((1 - product.price / product.originalPrice) * 100)}%</span>` : '';
                 const wrapperClass = product.isRaw ? 'product-image-wrapper raw-wrapper' : 'product-image-wrapper';
                 const imgClass = product.isRaw ? 'product-image raw-style' : 'product-image';
-                const rotateClass = '';
+                const wishlist = getWishlist();
+                const isSaved = wishlist.includes(product.id);
 
-                // Hover Image Logic - Only for frames, not raw lenses
-                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} ${rotateClass} main-img" loading="lazy">`;
+                // Hover Image Logic
+                let imageHTML = `<img src="${product.image}" alt="${product.name}" class="${imgClass} main-img" loading="lazy">`;
                 if (!product.isRaw && product.hoverImage) {
                     imageHTML += `<img src="${product.hoverImage}" alt="${product.name} on model" class="${imgClass} hover-img" loading="lazy">`;
                 }
 
+                const ratingRow = product.rating ? `
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                        ${starsHTML(product.rating)}
+                    </div>` : '';
+
+                const stockBadge = `<span style="font-size:0.68rem;color:#2e7d32;font-weight:700;display:flex;align-items:center;gap:4px;"><i class="fas fa-circle-check" style="font-size:0.6rem;"></i> In Stock</span>`;
+
                 return `
                 <div class="product-card reveal-scale" data-id="${product.id}" data-category="${product.category}" data-brand="${product.brand}" data-price="${product.price}">
-                    <div class="${wrapperClass}">
+                    <div class="${wrapperClass}" style="cursor:pointer;" onclick="window.location.href='product.html?id=${product.id}'">
                         ${isNewBadge}
                         ${discount}
                         ${imageHTML}
+                        <!-- Wishlist Heart -->
+                        <button class="card-heart-btn ${isSaved ? 'saved' : ''}" data-pid="${product.id}" title="Save to wishlist"
+                            style="position:absolute;top:10px;right:10px;z-index:10;background:white;border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:all 0.2s ease;">
+                            <i class="${isSaved ? 'fas' : 'far'} fa-heart" style="font-size:0.85rem;color:${isSaved ? '#e91e63' : '#bbb'};"></i>
+                        </button>
                     </div>
-                    <div class="product-info">
+                    <div class="product-info" style="cursor:pointer;" onclick="window.location.href='product.html?id=${product.id}'">
                         <div class="product-meta-top">
                             <span class="brand-name">${product.brand}</span>
                             <span class="category-pill">${product.category}</span>
                         </div>
                         <h3 class="product-title">${product.name}</h3>
+                        ${ratingRow}
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                            ${stockBadge}
+                        </div>
                         <div class="product-footer">
                             <span class="price-tag">KES ${product.price.toLocaleString()}</span>
-                            <button class="inquiry-button">INQUIRE</button>
+                            <button class="inquiry-button" data-pid="${product.id}">INQUIRE</button>
                         </div>
                     </div>
                 </div>
@@ -1133,9 +1172,24 @@
                     const card = tempDiv.firstElementChild;
                     grid.appendChild(card);
 
+                    // Heart/wishlist button — stop propagation so it doesn't open product page
+                    const heartBtn = card.querySelector('.card-heart-btn');
+                    if (heartBtn) {
+                        heartBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const isSaved = toggleWishlist(product.id);
+                            const icon = heartBtn.querySelector('i');
+                            icon.className = `${isSaved ? 'fas' : 'far'} fa-heart`;
+                            icon.style.color = isSaved ? '#e91e63' : '#bbb';
+                            heartBtn.classList.toggle('saved', isSaved);
+                        });
+                    }
+
+                    // INQUIRE button — WhatsApp, stop propagation so card doesn't navigate
                     const btn = card.querySelector('.inquiry-button');
                     if (btn) {
                         btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
                             e.preventDefault();
                             const message = encodeURIComponent(`Hi Lotex! Inquiry about: ${product.brand} ${product.name} (Ref: ${product.id}), Price: KES ${product.price}`);
                             window.open(`https://wa.me/254722361831?text=${message}`, '_blank');
