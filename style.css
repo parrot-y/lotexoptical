@@ -161,8 +161,24 @@ ul {
     justify-content: center;
 }
 
-.grid {
-    display: grid;
+.product-image,
+.category-img {
+    width: auto;
+    height: 90%;
+    max-width: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15)) contrast(1.2) brightness(1.1);
+}
+
+.product-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .gap-2 {
